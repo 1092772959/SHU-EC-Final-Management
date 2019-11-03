@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shu.icpc.dao.SchoolDao">
+    <!--    <resultMap id="" type="com.vue.demo.entity.Student">-->
+    <!--        <result column="id" jdbcType="INTEGER" property="id" />-->
+    <!--        <result column="userName" jdbcType="VARCHAR" property="userName" />-->
+    <!--        <result column="passWord" jdbcType="VARCHAR" property="passWord" />-->
+    <!--        <result column="realName" jdbcType="VARCHAR" property="realName" />-->
+    <!--    </resultMap>-->
+    <select id="findAll" resultType="School">
+        select * from school
+    </select>
+
+    <select id="findIdAndName" resultType="java.util.Map">
+        select id, school_name as schoolName from school
+        where check_status = 1
+    </select>
+
+    <select id="findById" parameterType="int" resultType= "School">
+        select * from school where id = #{id}
+    </select>
+
+    <select id="findByName" parameterType="String" resultType="School">
+        select * from school where school_name = #{name}
+    </select>
+
+    <select id="findChiefId" parameterType="int" resultType="int">
+        select chief_id from school where id = #{id}
+    </select>
+
+    <!--<update id="update" parameterType="School">-->
+        <!--update school-->
+        <!--set school_name = #{schoolName}, abbr_name = #{abbrName}, address = #{address},-->
+          <!--coach_id = #{coachId}, chief_name = #{chiefName}, phone = #{phone},-->
+          <!--bill_enterprise = #{billEnterprise}, postcode = #{postcode},-->
+          <!--tax_num = #{taxNum}, check_status = #{checkStatus}-->
+        <!--where id = #{id}-->
+    <!--</update>-->
+
+    <update id="update" parameterType="School">
+        update school
+        <trim prefix="set" suffixOverrides=",">
+            <if test="schoolName!=null">school_name = #{schoolName},</if>
+            <if test="abbrName!=null">abbr_name = #{abbrName},</if>
+            <if test="address!=null">address = #{address},</if>
+            <if test="coachId!=null">coach_id = #{coachId},</if>
+            <if test="chiefName!=null">chief_name=#{chiefName},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="billEnterprise!=null">bill_enterprise=#{billEnterprise},</if>
+            <if test="postcode!=null">postcode=#{postcode},</if>
+            <if test="taxNum!=null">tax_num=#{taxNum},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateCheckStatus">
+        update school
+        set check_status = #{status}
+        where id = #{id}
+    </update>
+
+    <insert id="insert" parameterType="School">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into school(school_name, abbr_name, address, coach_id, chief_name, phone, bill_enterprise, postcode,
+            tax_num, check_status)
+        values (#{schoolName}, #{abbrName}, #{address}, #{coachId}, #{chiefName}, #{phone}, #{billEnterprise}, #{postcode},
+           #{taxNum}, #{checkStatus})
+    </insert>
+
+    <delete id="delete">
+        delete from school
+        where id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,38 @@
+#spring:
+#  datasource:
+  #  url: jdbc:mysql://10.10.10.144:3306/PD_AAW2G?serverTimezone=CTT&useUnicode=true&characterEncoding=UTF-8
+  #  username: PD_AAW2G
+  #  password: a_zHIMlo
+  #  driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#  thymeleaf:
+#    cache: false
+#
+#  server:
+#    port: 8080
+#
+#  mybatis:
+#    configuration:
+#    map-underscore-to-camel-case: true          #驼峰
+#  mapper-locations:  classpath:mapper/*.xml     #mapper xml
+#  type-aliases-package: com.shu.icpc.entity     #实体类包
+#
+
+spring:
+  datasource:
+    url: jdbc:mysql://47.100.89.70:3306/icpc?serverTimezone=CTT&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+thymeleaf:
+  cache: false
+
+server:
+  port: 8080
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true          #驼峰
+  mapper-locations:  classpath:mapper/*.xml     #mapper xml
+  type-aliases-package: com.shu.icpc.entity     #实体类包

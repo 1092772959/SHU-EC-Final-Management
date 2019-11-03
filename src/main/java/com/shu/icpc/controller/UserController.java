@@ -1,0 +1,140 @@
+package com.shu.icpc.controller;
+
+import com.shu.icpc.dao.ContestDao;
+import com.shu.icpc.entity.Coach;
+import com.shu.icpc.entity.School;
+import com.shu.icpc.entity.Student;
+import com.shu.icpc.utils.Constants;
+import com.shu.icpc.utils.Result;
+import com.shu.icpc.utils.ResultTool;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@RequestMapping("/api/user")
+@Controller
+@Validated
+public class UserController extends CoreController{
+
+
+    @ResponseBody
+    @PostMapping("/adminLogin")
+    public Result login(@NotBlank String phone, @NotBlank String pswd){
+        return loginService.adminLogin(phone,pswd);
+    }
+
+
+    @ResponseBody
+    @PostMapping("/login")
+    public Result userLogin(@NotBlank String phone,@NotBlank String pswd){
+        return loginService.login(phone, pswd);
+    }
+
+    @ResponseBody
+    @RequestMapping("/unAuthenticate")
+    public Result userFail(){
+        return ResultTool.error(Constants.UNAUTHENTICATE);
+    }
+
+    @ResponseBody
+    @PostMapping("/logout")
+    public Result userLogout(){
+        return loginService.logout();
+    }
+
+    @ResponseBody
+    @GetMapping("/exist")
+    public Result checkAccountExists(@NotBlank String phone){
+        boolean res = signService.checkExists(phone);
+        return ResultTool.successGet(res);
+    }
+
+    @ResponseBody
+    @PostMapping("/student")
+    public Result addStudent(@Validated Student student){
+        Integer code = signService.studentSignUp(student);
+        if(code >= 700){
+            return ResultTool.error(code);
+        }
+        return ResultTool.success(code);
+    }
+
+    @ResponseBody
+    @PostMapping("/coach")
+    public Result addCoach(@Validated Coach coach){
+        Integer code = signService.coachSignUp(coach);
+        if(code >= 700){
+            return ResultTool.error(code);
+        }
+        return ResultTool.success(code);
+    }
+
+    @ResponseBody
+    @PostMapping("/school")
+    public Result addSchool(@NotBlank String schoolName,
+            @NotBlank String coachName, @NotBlank String phone, @NotBlank String email, @NotBlank String pswd){
+        School school = new School(schoolName, coachName, phone);
+
+        Coach coach = new Coach();
+        coach.setSchoolName(schoolName);
+        coach.setCoachName(coachName);
+        coach.setPhone(phone);
+        coach.setPswd(pswd);
+        coach.setEmail(email);
+
+        int code = signService.schoolSignUp(school, coach);
+        if(code >= 700){
+            return ResultTool.error(code);
+        }
+        return ResultTool.success(code);
+    }
+
+    @ResponseBody
+    @PostMapping("/retrieve/code")
+    public Result getRetrieveCode(@NotBlank String email){
+        if(signService.sendRetrieveEmail(email)){
+            return ResultTool.success();
+        }else{
+            return ResultTool.error(Constants.FAIL);
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("/retrieve/pswd")
+    public Result retrievePassword(@NotBlank String email, @NotBlank String code, @NotBlank String password){
+        if(signService.checkAndRetrieve(email, code, password)){
+            return ResultTool.success();
+        }else{
+            return ResultTool.error(Constants.FAIL);
+        }
+    }
+
+    /**
+     以下接口用于导入数据
+     */
+
+    @ResponseBody
+    @GetMapping("/school")
+    public Result getSchool(){
+        return ResultTool.successGet(schoolService.getAllIdAndNames());
+    }
+
+    @Resource
+    private ContestDao contestDao;
+
+    @ResponseBody
+    @PostMapping("/ecNum")
+    public Result injectECNum(@NotBlank String schoolName, @NotNull Integer num ){
+        School school = schoolService.getByName(schoolName);
+        System.out.println(school.getId());
+        contestDao.insertQuota(62, school.getId(), num);
+        return ResultTool.success();
+    }
+}

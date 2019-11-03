@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shu.icpc.dao.BillDao">
+
+    <select id="findAll" resultType="Bill">
+        select *
+        from bill
+    </select>
+
+    <select id="findBySchoolId" resultType="Bill">
+        select *
+        from bill
+        where school_id = #{schoolId}
+    </select>
+
+    <select id="findById" resultType="Bill">
+        select *
+        from bill
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="Bill">
+        insert into bill(school_id, bill_enterprise, tax_num, address, telephone, bank,
+        bank_account, content, type, money, checked)
+        values (#{schoolId}, #{billEnterprise}, #{taxNum}, #{address}, #{telephone}, #{bank},
+        #{bankAccount}, #{content}, #{type}, #{money}, #{checked})
+    </insert>
+
+    <update id="update" parameterType="Bill">
+        update bill
+        <trim prefix="set" suffixOverrides=",">
+            <if test="billEnterprise!=null">bill_enterprise = #{billEnterprise},</if>
+            <if test="taxNum!=null">tax_num=#{taxNum},</if>
+            <if test="address!=null">address = #{address},</if>
+            <if test="telephone!=null">telephone=#{telephone},</if>
+            <if test="bank!=null">bank=#{bank},</if>
+            <if test="bankAccount!=null">bank_account = #{bankAccount},</if>
+            <if test="content!=null">content=#{content},</if>
+            <if test="type!=null">type=#{type},</if>
+            <if test="money!=null">money=#{money},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateCheckedById">
+        update bill
+        set checked = #{checked}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from bill
+        where id = #{id}
+    </delete>
+</mapper>

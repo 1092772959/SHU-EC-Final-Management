@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shu.icpc.dao.ContestDao">
+
+    <select id = "findAll" resultType="Contest">
+        select *
+        from contest
+    </select>
+
+    <select id="findByName" resultType="Contest">
+        select *
+        from contest
+        where contest_title = #{contestTitle}
+    </select>
+
+    <select id="findAsCoach" resultType="java.util.Map">
+        select X.id, X.contest_title as contestTitle,
+          X.start_time as startTime, X.end_time as endTime,
+          X.sign_start_time as signStartTime, X.sign_end_time as signEndTime,
+          X.school_id as schoolId, X.chief, X.phone, X.email,
+          Y.num_team_max as numTeamMax
+        from contest as X, quota as Y
+        where X.id = Y.contest_id and Y.school_id = #{schoolId}
+    </select>
+
+    <select id="findById" resultType="Contest">
+        select * from contest where id = #{id}
+    </select>
+
+    <select id="findByStudentId" resultType="Contest">
+        select * from contest
+        where id in (
+          select contest_id from contest_record
+          where team_id in (
+            select id from team
+            where stu_a_id = #{studentId} or stu_b_id = #{studentId} or stu_c_id = #{studentId}
+          )
+        )
+    </select>
+
+    <insert id="insert" parameterType="Contest">
+        insert into contest(contest_title, start_time, end_time, sign_start_time, sign_end_time, school_id,
+              chief, phone, email, num_team_max)
+        values (#{contestTitle}, #{startTime}, #{endTime}, #{signStartTime}, #{signEndTime}, #{schoolId},
+                #{chief}, #{phone}, #{email}, #{numTeamMax})
+    </insert>
+
+    <delete id="delete">
+        delete from contest
+        where id = #{id}
+    </delete>
+
+
+
+    <insert id="signInContest">
+        insert into contest_record(contest_id, team_id, is_starred, coach_onsite )
+        values (#{contestId}, #{teamId}, #{isStarred}, #{coachOnSite})
+    </insert>
+
+    <delete id="signOffContest">
+        delete from contest_record
+        where contest_id = #{contestId} and team_id = #{teamId}
+    </delete>
+
+    <select id="findNumFactByContest" resultType="Integer">
+        select COUNT(Z.team_id)
+        from contest_record as Z
+        where Z.contest_id = #{contestId}
+    </select>
+
+    <select id="findByContestAndSchool" resultType="Integer">
+        select COUNT(Z.team_id)
+        from contest_record as Z
+        where Z.contest_id = #{contestId} and Z.team_id in (
+	      select id from team where team.school_id = #{schoolId})
+    </select>
+
+    
+    <insert id="insertQuota">
+        insert into quota(school_id, contest_id, num_team_max,  meal_coach_num)
+        values(#{schoolId}, #{contestId}, #{num}, 0)
+    </insert>
+
+    <select id="findNumMaxByContestAndSchool" resultType="Integer">
+        select num_team_max
+        from quota
+        where contest_id = #{contestId} and school_id = #{schoolId}
+    </select>
+
+    <select id="findQuotaByContest" resultType="java.util.Map">
+        select X.school_id as schoolId, S.school_name as schoolName, X.num_team_max as numTeamMax
+        from quota as X, school as S
+        where X.contest_id = #{contestId} and X.school_id = S.id
+    </select>
+
+    <select id="findQuotaByContestAndSchool" resultType="java.util.Map">
+         select X.school_id as schoolId, S.school_name as schoolName, X.num_team_max as numTeamMax
+        from quota as X, school as S
+        where X.contest_id = #{contestId} and X.school_id = S.id and S.id = #{schoolId}
+    </select>
+
+    <update id="updateQuota">
+        update quota
+        set num_team_max = #{num}
+        where contest_id = #{contestId} and school_id = #{schoolId}
+    </update>
+
+    <update id="updateMealNum">
+        update quota
+        set meal_coach_num = #{mealNum}
+        where contest_id = #{contestId} and school_id = #{schoolId}
+    </update>
+
+
+    <insert id="insertOnSiteCoach">
+        insert into coach_onsite(contest_id, coach_id)
+        values (#{contestId}, #{coachId})
+    </insert>
+
+    <select id="findOnSiteByContest" resultType="java.util.Map">
+        select X.coach_id as coachId
+        from coach_onsite as X
+        where contest_id = #{contestId}
+    </select>
+
+    <select id="findOnSiteByContestAndCoach" resultType="Integer">
+        select coach_id
+        from coach_onsite
+        where contest_id = #{contestId} and coach_id = #{coachId}
+    </select>
+
+    <select id="findDetailedInfo" resultType="java.util.LinkedHashMap">
+        select
+        S.school_name as schoolName, S.abbr_name as abbrName, T.team_name as teamName, T.foreign_name as teamForeignName,
+        C.coach_name as coachName, CONCAT(C.family_name,' ', C.first_name) as coachForeignName, C.phone, C.email, CR.coach_onsite as coachOnSite ,C.size as coachSize,
+        SA.stu_name as stuAName, CONCAT(SA.family_name,' ', SA.first_name) as stuAForeignName, SA.sex as stuASex, SA.phone as stuAPhone, SA.size as stuASize,
+        SB.stu_name as stuBName, CONCAT(SB.family_name,' ', SB.first_name) as stuBForeignName, SB.sex as stuBSex, SB.phone as stuBPhone, SB.size as stuBSize,
+        SC.stu_name as stuCName, CONCAT(SC.family_name,' ', SC.first_name) as stuCForeignName, SC.sex as stuCSex, SC.phone as stuCPhone, SC.size as stuCSize
+        from team as T, coach as C, student as SA, student as SB, student as SC, school as S, contest_record as CR
+        where
+        T.coach_id = C.id and T.stu_a_id = SA.id and T.stu_b_id = SB.id and T.stu_c_id = SC.id and S.id = T.school_id and CR.contest_id = #{contestId} and CR.team_id = T.id;
+    </select>
+
+    <update id="updateAwardFilePath">
+        update contest_record
+        set award_path = #{path}
+        where contest_id = #{contestId} and team_id = #{teamId}
+    </update>
+</mapper>
