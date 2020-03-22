@@ -323,21 +323,21 @@ public class IcpcApplicationTests {
     @Resource
     private ContestService contestService;
 
-    @Test
-    public void testRedis(){
-//        String pswd = PasswordGenerateUtil.getPassword("000","13357730973", Constants.hashTime);
-//        System.out.println(pswd);
-//        List<Map> res = contestService.getDetailedInformation(62);
-//        for(Map m :res){
-//            System.out.println(m);
-//        }
-
-        redisTemplate.opsForValue().set("1092772959","123456"+1, 5, TimeUnit.SECONDS);
-        String str = (String)redisTemplate.opsForValue().get("1092772959");
-        System.out.println(str);
-        System.out.println(str.substring(0,6));
-        System.out.println(str.charAt(6));
-    }
+//    @Test
+//    public void testRedis(){
+////        String pswd = PasswordGenerateUtil.getPassword("000","13357730973", Constants.hashTime);
+////        System.out.println(pswd);
+////        List<Map> res = contestService.getDetailedInformation(62);
+////        for(Map m :res){
+////            System.out.println(m);
+////        }
+//
+//        redisTemplate.opsForValue().set("1092772959","123456"+1, 5, TimeUnit.SECONDS);
+//        String str = (String)redisTemplate.opsForValue().get("1092772959");
+//        System.out.println(str);
+//        System.out.println(str.substring(0,6));
+//        System.out.println(str.charAt(6));
+//    }
 
     @Test
     public void testTime(){
@@ -359,8 +359,8 @@ public class IcpcApplicationTests {
         school.setTaxNum("asdasdXECE");
         school.setAbbrName("TEST");
         school.setChiefName("ME");
-        schoolDao.insert(school);
-        System.out.println(school.getId());
+        //schoolDao.insert(school);
+        //System.out.println(school.getId());
 
     }
 }
