@@ -77,6 +77,23 @@ public class Constants {
 
     public static final Integer UPDATE_QUOTA_ERROR = 723;   //该学校报名数已超过此限额
 
+    //-----------------solo contest related
+    public static final Integer STUDENT_NOT_EXISTS = 720;   //no such student
+
+    public static final Integer SOLO_CONTEST_NOT_EXISTS = 721; // no such solo contest
+
+    public static final Integer NUM_LIMIT = 722;
+
+    public static final Integer TIME_ERROR = 723;
+
+    //-----------------team contest related
+    public static final Integer SIGN_IN_NO_TEAM = 730;  // no such team
+
+    public static final Integer CONTEST_NOT_EXISTS = 731;  // no such contest
+
+    public static final Integer QUOTA_LIMIT =  732;
+
+
     public static final String ADMIN = "admin";
 
     public static final String CHIEF = "chief";

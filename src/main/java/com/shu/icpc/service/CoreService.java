@@ -2,11 +2,13 @@ package com.shu.icpc.service;
 
 import com.shu.icpc.Component.MailService;
 import com.shu.icpc.dao.*;
+import com.shu.icpc.entity.Student;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
 
 public class CoreService {
+    //dao interface
     @Resource
     protected StudentDao studentDao;
 
@@ -30,6 +32,13 @@ public class CoreService {
 
     @Resource
     protected BillDao billDao;
+
+    @Resource
+    protected SoloContestDao soloContestDao;
+
+    //services
+    @Resource
+    protected StudentService studentService;
 
     @Resource
     protected RedisTemplate redisTemplate;

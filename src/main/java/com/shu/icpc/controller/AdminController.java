@@ -1,9 +1,6 @@
 package com.shu.icpc.controller;
 
-import com.shu.icpc.entity.Coach;
-import com.shu.icpc.entity.Contest;
-import com.shu.icpc.entity.School;
-import com.shu.icpc.entity.Student;
+import com.shu.icpc.entity.*;
 import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.Result;
 import com.shu.icpc.utils.ResultTool;
@@ -13,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
@@ -183,6 +181,12 @@ public class AdminController extends CoreController{
         return ResultTool.successGet(contestService.getDetailedInformation(contestId));
     }
 
+    @ResponseBody
+    @PostMapping("/solo")
+    public Result addSoloContest(@Validated SoloContest soloContest){
+        Integer code = this.soloContestService.addSoloContest(soloContest);
+        return ResultTool.success(code);
+    }
 
     //上传证书
     @ResponseBody

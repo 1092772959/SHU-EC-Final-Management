@@ -58,4 +58,9 @@ public class StudentService extends CoreService{
         studentDao.updatePswd(studentId, pswd);
         return Constants.SUCCESS;
     }
+
+    public boolean hasStudent(Integer stuId){
+        Student stu = studentDao.findById(stuId);
+        return stu != null;
+    }
 }

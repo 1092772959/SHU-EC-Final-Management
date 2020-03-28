@@ -25,4 +25,7 @@ public class CoreController {
 
     @Resource
     protected ContestService contestService;
+
+    @Resource
+    protected SoloContestService soloContestService;
 }

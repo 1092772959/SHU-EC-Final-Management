@@ -12,6 +12,7 @@ import com.shu.icpc.utils.PasswordGenerateUtil;
 import com.shu.icpc.utils.TimeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -55,9 +56,11 @@ public class IcpcApplicationTests {
 //        for(Map m:res){
 //            System.out.println(m);
 //        }
-        
-
-
+    }
+    @Test
+    public void testMailService(){
+        String emailAddr = "13120716616@163.com", title = "SHU_TEST", content = "asdasd";
+        mailService.sendSimpleMail(emailAddr, title, content);
     }
 
 //    @Resource
