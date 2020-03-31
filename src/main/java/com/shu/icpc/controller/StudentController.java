@@ -2,10 +2,13 @@ package com.shu.icpc.controller;
 
 import com.shu.icpc.entity.Coach;
 import com.shu.icpc.entity.Contest;
+import com.shu.icpc.entity.SoloContest;
 import com.shu.icpc.entity.Student;
 import com.shu.icpc.utils.Result;
 import com.shu.icpc.utils.ResultTool;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +39,6 @@ public class StudentController extends CoreController{
                           @NotBlank String size, @NotBlank String sex){
         Student stu = new Student();
         stu.setId(id);
-//        stu.setStuId(stuId);
         stu.setFamilyName(familyName);
         stu.setFirstName(firstName);
         stu.setCollege(college);
@@ -54,7 +56,7 @@ public class StudentController extends CoreController{
     @PostMapping("/password")
     public Result changePassword(@NotNull Integer studentId, @NotBlank String oldPassword, @NotBlank String newPassword){
         int code = studentService.setPassword(studentId, oldPassword, newPassword);
-        return ResultTool.success(code);
+        return ResultTool.resp(code);
     }
 
     @ResponseBody
@@ -62,5 +64,33 @@ public class StudentController extends CoreController{
     public Result getContests(@NotNull Integer studentId){
         List<Contest> res = contestService.getByStudent(studentId);
         return ResultTool.successGet(res);
+    }
+
+    /**
+     * solo contest related
+     * @param studentId
+     * @return
+     */
+
+    @ResponseBody
+    @GetMapping("/solo")
+    public Result getRegisteredSoloContests(@NotNull Integer studentId){
+        List<SoloContest> res = soloContestService.getByStuId(studentId);
+        return ResultTool.successGet(res);
+    }
+
+    @ResponseBody
+    @PostMapping("/solo/signIn")
+    public Result signInSoloContest(@NotNull Integer studentId, @NotNull Integer soloContestId,
+                                    @NotNull Integer isStarred){
+        Integer code = this.soloContestService.signIn(studentId, soloContestId, isStarred);
+        return ResultTool.resp(code);
+    }
+
+    @ResponseBody
+    @PostMapping("/solo/signOff")
+    public Result signOffSoloContest(@NotNull Integer studentId, @NotNull Integer soloContestId){
+        Integer code = this.soloContestService.signOff(studentId, soloContestId);
+        return ResultTool.resp(code);
     }
 }

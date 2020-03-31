@@ -3,25 +3,24 @@ package com.shu.icpc.controller;
 import com.shu.icpc.dao.ContestDao;
 import com.shu.icpc.entity.Coach;
 import com.shu.icpc.entity.School;
+import com.shu.icpc.entity.SoloContest;
 import com.shu.icpc.entity.Student;
 import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.Result;
 import com.shu.icpc.utils.ResultTool;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @RequestMapping("/api/user")
 @Controller
 @Validated
-public class UserController extends CoreController{
+public class PublicController extends CoreController{
 
 
     @ResponseBody
@@ -37,10 +36,11 @@ public class UserController extends CoreController{
         return loginService.login(phone, pswd);
     }
 
+    //for internal system invoking; send msg to user if haven't logged in
     @ResponseBody
     @RequestMapping("/unAuthenticate")
     public Result userFail(){
-        return ResultTool.error(Constants.UNAUTHENTICATE);
+        return ResultTool.resp(Constants.UNAUTHENTICATE);
     }
 
     @ResponseBody
@@ -61,9 +61,9 @@ public class UserController extends CoreController{
     public Result addStudent(@Validated Student student){
         Integer code = signService.studentSignUp(student);
         if(code >= 700){
-            return ResultTool.error(code);
+            return ResultTool.resp(code);
         }
-        return ResultTool.success(code);
+        return ResultTool.resp(code);
     }
 
     @ResponseBody
@@ -71,9 +71,9 @@ public class UserController extends CoreController{
     public Result addCoach(@Validated Coach coach){
         Integer code = signService.coachSignUp(coach);
         if(code >= 700){
-            return ResultTool.error(code);
+            return ResultTool.resp(code);
         }
-        return ResultTool.success(code);
+        return ResultTool.resp(code);
     }
 
     @ResponseBody
@@ -91,9 +91,9 @@ public class UserController extends CoreController{
 
         int code = signService.schoolSignUp(school, coach);
         if(code >= 700){
-            return ResultTool.error(code);
+            return ResultTool.resp(code);
         }
-        return ResultTool.success(code);
+        return ResultTool.resp(code);
     }
 
     @ResponseBody
@@ -102,7 +102,7 @@ public class UserController extends CoreController{
         if(signService.sendRetrieveEmail(email)){
             return ResultTool.success();
         }else{
-            return ResultTool.error(Constants.FAIL);
+            return ResultTool.resp(Constants.FAIL);
         }
     }
 
@@ -112,14 +112,12 @@ public class UserController extends CoreController{
         if(signService.checkAndRetrieve(email, code, password)){
             return ResultTool.success();
         }else{
-            return ResultTool.error(Constants.FAIL);
+            return ResultTool.resp(Constants.FAIL);
         }
     }
 
     /**
-     以下接口用于导入数据
-     */
-
+     use to store data in batch
     @ResponseBody
     @GetMapping("/school")
     public Result getSchool(){
@@ -137,4 +135,5 @@ public class UserController extends CoreController{
         contestDao.insertQuota(62, school.getId(), num);
         return ResultTool.success();
     }
+    */
 }

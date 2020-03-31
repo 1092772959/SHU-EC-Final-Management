@@ -34,9 +34,9 @@ public class LoginService extends CoreService {
             ch.setPswd("");
             ch.setSchoolName(school.getSchoolName());
             if(school.getCoachId() == ch.getId()){
-                return ResultTool.success(Constants.LOGIN_SUCCESS_CHIEF_CODE,ch);      //负责人教练
+                return ResultTool.resp(Constants.LOGIN_SUCCESS_CHIEF_CODE,ch);      //负责人教练
             }
-            return ResultTool.success(Constants.LOGIN_SUCCESS_COACH_CODE, ch);          //普通教练
+            return ResultTool.resp(Constants.LOGIN_SUCCESS_COACH_CODE, ch);          //普通教练
         }
 
         Student stu = studentDao.findByPhone(phone);
@@ -56,17 +56,17 @@ public class LoginService extends CoreService {
             stu.setPswd("");
             School school = schoolDao.findById(stu.getSchoolId());
             stu.setSchoolName(school.getSchoolName());
-            return ResultTool.success(Constants.LOGIN_SUCCESS_CODE,stu);
+            return ResultTool.resp(Constants.LOGIN_SUCCESS_CODE,stu);
         }
 
-        return ResultTool.error(Constants.LOGIN_NO_ACCOUNT_CODE);           //用户不存在
+        return ResultTool.resp(Constants.LOGIN_NO_ACCOUNT_CODE);           //用户不存在
     }
 
     public Result adminLogin(String phone,String pswd) {
         Subject currentUser = SecurityUtils.getSubject();
         Admin admin = adminDao.findByPhone(phone);
         if(admin == null)
-            return ResultTool.error(Constants.LOGIN_NO_ACCOUNT_CODE);
+            return ResultTool.resp(Constants.LOGIN_NO_ACCOUNT_CODE);
 
         ShiroToken token = new ShiroToken(phone, pswd, ShiroToken.Type.Admin);
         currentUser.login(token);
@@ -79,8 +79,8 @@ public class LoginService extends CoreService {
         if (subject.isAuthenticated()) {
             System.out.println(subject.getPrincipal() + " logout");
             subject.logout();
-            return ResultTool.success(Constants.LOGIN_SUCCESS_CODE);
+            return ResultTool.resp(Constants.LOGIN_SUCCESS_CODE);
         }
-        return ResultTool.error(Constants.FAIL);
+        return ResultTool.resp(Constants.FAIL);
     }
 }

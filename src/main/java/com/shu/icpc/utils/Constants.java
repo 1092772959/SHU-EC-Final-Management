@@ -86,6 +86,8 @@ public class Constants {
 
     public static final Integer TIME_ERROR = 723;
 
+    public static final Integer NO_RECORD = 724;  //no sign in record to delete
+
     //-----------------team contest related
     public static final Integer SIGN_IN_NO_TEAM = 730;  // no such team
 

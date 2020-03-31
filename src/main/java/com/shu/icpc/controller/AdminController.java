@@ -81,7 +81,7 @@ public class AdminController extends CoreController{
     public Result addContest(@Validated Contest contest){
         boolean res = contestService.addContest(contest);
         if(!res){
-            return ResultTool.error(Constants.NAME_DUPLICATED);       //名称重复
+            return ResultTool.resp(Constants.NAME_DUPLICATED);       //名称重复
         }
         return ResultTool.success();
     }
@@ -116,7 +116,6 @@ public class AdminController extends CoreController{
         return ResultTool.success();
     }
 
-
     /**
      * 学校-竞赛名额查看
      */
@@ -141,20 +140,20 @@ public class AdminController extends CoreController{
      */
     @ResponseBody
     @PostMapping("/quota")
-    public Result addQuota(Integer contestId, Integer schoolId, Integer num){
+    public Result addQuota(@NotNull Integer contestId, @NotNull Integer schoolId, @NotNull Integer num){
         boolean res = contestService.addQuota(contestId, schoolId , num);
         if(res){
             return ResultTool.success();
         }
-        return ResultTool.error(Constants.FAIL);
+        return ResultTool.resp(Constants.FAIL);
     }
 
     @ResponseBody
     @PostMapping("/quota/update")
-    public Result updateQuota(Integer contestId, Integer schoolId, Integer num){
+    public Result updateQuota(@NotNull Integer contestId, @NotNull Integer schoolId, @NotNull Integer num){
         int code = contestService.setQuota(contestId, schoolId, num);
         if(code != 1){
-            return ResultTool.error(Constants.UPDATE_QUOTA_ERROR);
+            return ResultTool.resp(Constants.UPDATE_QUOTA_ERROR);
         }
         return ResultTool.success();
     }
@@ -181,18 +180,23 @@ public class AdminController extends CoreController{
         return ResultTool.successGet(contestService.getDetailedInformation(contestId));
     }
 
+    /**
+     * solo contest related
+     * @param soloContest
+     * @return
+     */
+
     @ResponseBody
     @PostMapping("/solo")
     public Result addSoloContest(@Validated SoloContest soloContest){
         Integer code = this.soloContestService.addSoloContest(soloContest);
-        return ResultTool.success(code);
+        return ResultTool.resp(code);
     }
 
-    //上传证书
     @ResponseBody
-    @PostMapping
-    public Result uploadCredential(@NotNull MultipartFile file, @NotNull Integer contestId, @NotNull Integer teamId) throws IOException {
-        int code = contestService.uploadFile(file, contestId, teamId);
-        return ResultTool.success();
+    @GetMapping("/solo/report")
+    public Result getSoloContestDetails(@NotNull Integer soloContestId){
+        List<Map> res = this.soloContestService.getDetailsByContest(soloContestId);
+        return ResultTool.successGet(res);
     }
 }

@@ -56,7 +56,7 @@ public class CoachController extends CoreController {
     public Result changePassword(@NotNull Integer coachId,
                                  @NotBlank String oldPassword, @NotBlank String newPassword){
         int code = coachService.setPassword(coachId, oldPassword, newPassword);
-        return ResultTool.success(code);
+        return ResultTool.resp(code);
     }
 
     @ResponseBody
@@ -117,7 +117,7 @@ public class CoachController extends CoreController {
         if(teamService.add(team)){
             return ResultTool.success();
         }
-        return ResultTool.error(Constants.FAIL);
+        return ResultTool.resp(Constants.FAIL);
     }
 
     @ResponseBody
@@ -131,7 +131,7 @@ public class CoachController extends CoreController {
     public Result deleteTeam(@NotNull Integer teamId){
         boolean res = teamService.delete(teamId);
         if(!res){
-            return ResultTool.error(Constants.FAIL);
+            return ResultTool.resp(Constants.FAIL);
         }
         return ResultTool.success();
     }
@@ -170,7 +170,7 @@ public class CoachController extends CoreController {
         if(res){
             return ResultTool.success();
         }
-        return ResultTool.error(Constants.FAIL);
+        return ResultTool.resp(Constants.FAIL);
     }
 
     @ResponseBody
@@ -185,7 +185,7 @@ public class CoachController extends CoreController {
     public Result updateMealNum(@NotNull Integer contestId, @NotNull Integer schoolId, @NotNull Integer num){
         boolean res = contestService.setMealCoachNum(contestId, schoolId, num);
         if(!res){
-            return ResultTool.error(Constants.FAIL);
+            return ResultTool.resp(Constants.FAIL);
         }
         return ResultTool.success();
     }
@@ -218,7 +218,7 @@ public class CoachController extends CoreController {
     @PostMapping("/bill")
     public Result addBill( @Validated Bill bill){
         if(!schoolService.checkBillType(bill) || !schoolService.addBill(bill)){
-            return ResultTool.error(Constants.FAIL);
+            return ResultTool.resp(Constants.FAIL);
         }
         return ResultTool.success();
     }
@@ -231,8 +231,21 @@ public class CoachController extends CoreController {
             throw new ValidationException();                //非空校验
         }
         if(!schoolService.checkBillType(bill) || !schoolService.setBill(bill)){
-            return ResultTool.error(Constants.FAIL);
+            return ResultTool.resp(Constants.FAIL);
         }
         return ResultTool.success();
+    }
+
+    /**
+     * solo contest related
+     * @param schoolId
+     * @param soloContestId
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/solo/myStudents")
+    public Result getSoloContestsBySchool(@NotNull Integer soloContestId, @NotNull Integer schoolId){
+        List<Map> res = this.soloContestService.getDetailsBySchool(soloContestId, schoolId);
+        return ResultTool.successGet(res);
     }
 }

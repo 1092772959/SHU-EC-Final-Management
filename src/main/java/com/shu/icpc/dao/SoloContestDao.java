@@ -14,8 +14,8 @@ public interface SoloContestDao {
 
     List<SoloContest> findByName(String contestTitle);
 
-    //查看该校报名该场比赛的队伍数
-    Integer findByContestAndSchool(Integer soloContestId, Integer schoolId);
+    //查看该校报名该场比赛的人数
+    Integer findNumByContestAndSchool(Integer soloContestId, Integer schoolId);
 
     Integer findNumFactByContest(Integer soloContestId);
 
@@ -33,8 +33,8 @@ public interface SoloContestDao {
 
     int delete(Integer id);
 
-    //int update(Contest contest);
+    List<Map> findDetailsByContestAndSchool(Integer soloContestId, Integer schoolId);
 
-    List<Map> findDetailedInfo(Integer soloContestId);
+    List<Map> findDetailsByContest(Integer soloContestId);
 
 }

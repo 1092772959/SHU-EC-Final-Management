@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -34,12 +35,10 @@ public class SoloContestService extends CoreService{
         return Constants.SUCCESS;
     }
 
-
     public boolean hasSoloContest(Integer id){
         SoloContest sc = soloContestDao.findById(id);
         return sc != null;
     }
-
 
     public List<SoloContest> getAll(){
         return this.soloContestDao.findAll();
@@ -50,11 +49,29 @@ public class SoloContestService extends CoreService{
     }
 
     public List<SoloContest> getByStuId(Integer stuId){
-        return this.soloContestDao.findByStudentId(stuId);
+        List<SoloContest> res = soloContestDao.findByStudentId(stuId);
+
+        //also need the number of students who have already signed in
+        for(int i = 0;i < res.size();++i){
+            SoloContest sc = res.get(i);
+            Integer cnt = this.soloContestDao.findNumFactByContest(sc.getId());
+            sc.setNumSignedIn(cnt);
+        }
+        return res;
     }
 
     public List<SoloContest> getByTitle(String title){
         return this.soloContestDao.findByName(title);
+    }
+
+    //for coach
+    public List<Map> getDetailsBySchool(Integer soloContestId, Integer schoolId){
+        return this.soloContestDao.findDetailsByContestAndSchool(soloContestId, schoolId);
+    }
+
+    //for admin
+    public List<Map> getDetailsByContest(Integer soloContestId){
+        return this.soloContestDao.findDetailsByContest(soloContestId);
     }
 
     public Integer signIn(Integer stuId, Integer soloContestId, Integer isStarred){
@@ -77,7 +94,27 @@ public class SoloContestService extends CoreService{
         }
 
         this.soloContestDao.signInContest(stuId, soloContestId, isStarred);
+        //TODO send message to student
+
         return Constants.SUCCESS;
     }
 
+    public Integer signOff(Integer stuId, Integer soloContestId){
+        Student stu = this.studentDao.findById(stuId);
+        if(stu == null){
+            return Constants.STUDENT_NOT_EXISTS;
+        }
+        SoloContest sc = this.soloContestDao.findById(soloContestId);
+        if(sc == null){
+            return Constants.SOLO_CONTEST_NOT_EXISTS;
+        }
+
+        Date time = new Date();
+        if(time.before(sc.getSignStartTime()) || time.after(sc.getSignEndTime())){
+            return Constants.FAIL;
+        }
+
+        //TODO send message to student
+        return Constants.SUCCESS;
+    }
 }

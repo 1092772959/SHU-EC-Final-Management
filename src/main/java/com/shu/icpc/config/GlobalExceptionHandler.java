@@ -34,14 +34,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value={DataIntegrityViolationException.class})
     public Result DataIntegrityViolationException(Exception e){
         e.printStackTrace();
-        return ResultTool.error(Constants.DATA_INTEGRITY_VIOLATION_CODE,Constants.DATA_INTEGRITY_VIOLATION);
+        return ResultTool.resp(Constants.DATA_INTEGRITY_VIOLATION_CODE,Constants.DATA_INTEGRITY_VIOLATION);
     }
 
     @ResponseBody
     @ExceptionHandler(value = {IncorrectCredentialsException.class})
     public Result loginExceptionHandling(Exception e) {
         System.out.println("密码错误");
-        return ResultTool.error(Constants.LOGIN_WRONG_PASSWORD_CODE, Constants.LOGIN_WRONG_PASSWORD);
+        return ResultTool.resp(Constants.LOGIN_WRONG_PASSWORD_CODE, Constants.LOGIN_WRONG_PASSWORD);
     }
 
     @ResponseBody
@@ -57,33 +57,33 @@ public class GlobalExceptionHandler {
 //            e1.printStackTrace();
         }
         e.printStackTrace(pw);
-        return ResultTool.error(Constants.UNKNOWN_ERROR_CODE,  s);
+        return ResultTool.resp(Constants.UNKNOWN_ERROR_CODE,  s);
     }
 
     @ResponseBody
     @ExceptionHandler(value = {ConstraintViolationException.class, BindException.class, ValidationException.class})
     public Result ValidationException(Exception e){
 //        e.printStackTrace();
-        return ResultTool.error(Constants.VALIDATION_EMPTY_CODE,Constants.VALIDATION_EMPTY);
+        return ResultTool.resp(Constants.VALIDATION_EMPTY_CODE,Constants.VALIDATION_EMPTY);
     }
 
     //shiro
     @ResponseBody
     @ExceptionHandler(value = LockedAccountException.class)
     public Result LockedAccountException(Exception e){
-        return ResultTool.error(Constants.LOGIN_CHECKED_CODE, Constants.LOGIN_CHECKED);
+        return ResultTool.resp(Constants.LOGIN_CHECKED_CODE, Constants.LOGIN_CHECKED);
     }
 
     @ResponseBody
     @ExceptionHandler(value = DisabledAccountException.class)
     public Result DisabledAccountException(Exception e){
-        return ResultTool.error(Constants.LOGIN_REJECTED_CODE, Constants.LOGIN_REJECTED);
+        return ResultTool.resp(Constants.LOGIN_REJECTED_CODE, Constants.LOGIN_REJECTED);
     }
 
     @ResponseBody
     @ExceptionHandler(value = UnauthorizedException.class)
     public Result UnauthorizedException(Exception e){
-        return ResultTool.error(Constants.UNAUTHORIZEDEXCEPTION_CODE, Constants.UNAUTHORIZEDEXCEPTION);
+        return ResultTool.resp(Constants.UNAUTHORIZEDEXCEPTION_CODE, Constants.UNAUTHORIZEDEXCEPTION);
     }
 
     //违反唯一约束
@@ -91,6 +91,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
     public Result IntegrityConstraint(Exception e){
         System.out.println("手机号或邮箱重复");
-        return ResultTool.error(Constants.FAIL);
+        return ResultTool.resp(Constants.FAIL);
     }
 }
