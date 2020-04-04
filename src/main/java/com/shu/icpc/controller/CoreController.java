@@ -1,6 +1,8 @@
 package com.shu.icpc.controller;
 
+import com.shu.icpc.Component.OSSService;
 import com.shu.icpc.service.*;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 
@@ -28,4 +30,7 @@ public class CoreController {
 
     @Resource
     protected SoloContestService soloContestService;
+
+    @Resource
+    protected OSSService ossService;
 }

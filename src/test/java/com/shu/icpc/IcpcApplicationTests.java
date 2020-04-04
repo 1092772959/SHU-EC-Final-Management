@@ -1,6 +1,7 @@
 package com.shu.icpc;
 
 import com.shu.icpc.Component.MailService;
+import com.shu.icpc.Component.OSSService;
 import com.shu.icpc.dao.SchoolDao;
 import com.shu.icpc.entity.Contest;
 import com.shu.icpc.entity.School;
@@ -12,6 +13,7 @@ import com.shu.icpc.service.SoloContestService;
 import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.PasswordGenerateUtil;
 import com.shu.icpc.utils.TimeUtil;
+import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +65,7 @@ public class IcpcApplicationTests {
     @Test
     public void testMailService(){
         String emailAddr = "13120716616@163.com", title = "SHU_TEST", content = "asdasd";
-        mailService.sendSimpleMail(emailAddr, title, content);
+        //mailService.sendSimpleMail(emailAddr, title, content);
     }
 
     @Test
@@ -80,6 +82,14 @@ public class IcpcApplicationTests {
 
     @Resource
     private SoloContestService soloContestService;
+
+    @Resource
+    private OSSService ossService;
+
+    @Test
+    public void testOSSSerivice() {
+        System.out.println(this.ossService.getToken());
+    }
 
 //    @Resource
 //    private StudentDao studentDao;

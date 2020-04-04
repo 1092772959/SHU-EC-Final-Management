@@ -116,14 +116,25 @@ public class PublicController extends CoreController{
         }
     }
 
-    /**
-     use to store data in batch
+
     @ResponseBody
     @GetMapping("/school")
     public Result getSchool(){
         return ResultTool.successGet(schoolService.getAllIdAndNames());
     }
 
+    /**
+     * refresh oss client server for front-end app
+     * @return
+     */
+    @ResponseBody
+    @GetMapping
+    public Result refreshToken(){
+        String token = ossService.getToken();
+        return ResultTool.successGet(token);
+    }
+
+    /*
     @Resource
     private ContestDao contestDao;
 

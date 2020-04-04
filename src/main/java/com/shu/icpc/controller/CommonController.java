@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.List;
@@ -25,6 +26,7 @@ public class CommonController extends CoreController{
         List<SoloContest> res = this.soloContestService.getAll();
         return ResultTool.successGet(res);
     }
+
 
     
 }
