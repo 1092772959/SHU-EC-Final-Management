@@ -32,7 +32,7 @@ public class PublicController extends CoreController{
 
     @ResponseBody
     @PostMapping("/login")
-    public Result userLogin(@NotBlank String phone,@NotBlank String pswd){
+    public Result userLogin(@NotBlank String phone, @NotBlank String pswd){
         return loginService.login(phone, pswd);
     }
 

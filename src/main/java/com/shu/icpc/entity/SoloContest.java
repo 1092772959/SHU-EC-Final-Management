@@ -9,7 +9,7 @@ public class SoloContest {
     private Integer id;
 
     @NotBlank
-    private String contestTitle;
+    private String title;
 
     @NotNull
     private Date startTime;
@@ -49,12 +49,12 @@ public class SoloContest {
         this.id = id;
     }
 
-    public String getContestTitle() {
-        return contestTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setContestTitle(String contestTitle) {
-        this.contestTitle = contestTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Date getStartTime() {

@@ -19,7 +19,7 @@ public class MailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    //将properties中的发送者地址注入
+    //properties IOC inject
     @Value("${mail.fromMail.addr}")
     private String host;
 

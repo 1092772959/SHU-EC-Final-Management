@@ -4,7 +4,10 @@ import com.shu.icpc.entity.*;
 import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.Result;
 import com.shu.icpc.utils.ResultTool;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.apache.tomcat.util.bcel.Const;
 import org.apache.tomcat.util.bcel.classfile.Constant;
 import org.springframework.stereotype.Controller;
@@ -238,14 +241,20 @@ public class CoachController extends CoreController {
 
     /**
      * solo contest related
-     * @param schoolId
      * @param soloContestId
      * @return
      */
     @ResponseBody
-    @GetMapping("/solo/myStudents")
-    public Result getSoloContestsBySchool(@NotNull Integer soloContestId, @NotNull Integer schoolId){
+    @GetMapping("/solo/schoolStatus")
+    public Result getSoloContestsBySchool(@NotNull Integer soloContestId){
+        Integer schoolId = getUserFromSession().getSchoolId();
         List<Map> res = this.soloContestService.getDetailsBySchool(soloContestId, schoolId);
         return ResultTool.successGet(res);
+    }
+
+    private Coach getUserFromSession(){
+        Subject user = SecurityUtils.getSubject();
+        Session session = user.getSession();
+        return (Coach)session.getAttribute(Constants.SESSION_USER);
     }
 }

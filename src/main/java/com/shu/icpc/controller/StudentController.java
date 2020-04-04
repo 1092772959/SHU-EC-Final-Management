@@ -4,11 +4,13 @@ import com.shu.icpc.entity.Coach;
 import com.shu.icpc.entity.Contest;
 import com.shu.icpc.entity.SoloContest;
 import com.shu.icpc.entity.Student;
+import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.Result;
 import com.shu.icpc.utils.ResultTool;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -68,29 +70,36 @@ public class StudentController extends CoreController{
 
     /**
      * solo contest related
-     * @param studentId
-     * @return
      */
 
     @ResponseBody
-    @GetMapping("/solo")
-    public Result getRegisteredSoloContests(@NotNull Integer studentId){
+    @GetMapping("/mySolo")
+    public Result getRegisteredSoloContests(){
+        Integer studentId = this.getUserFromSession().getId();
         List<SoloContest> res = soloContestService.getByStuId(studentId);
         return ResultTool.successGet(res);
     }
 
     @ResponseBody
     @PostMapping("/solo/signIn")
-    public Result signInSoloContest(@NotNull Integer studentId, @NotNull Integer soloContestId,
+    public Result signInSoloContest(@NotNull Integer soloContestId,
                                     @NotNull Integer isStarred){
+        Integer studentId = this.getUserFromSession().getId();
         Integer code = this.soloContestService.signIn(studentId, soloContestId, isStarred);
         return ResultTool.resp(code);
     }
 
     @ResponseBody
     @PostMapping("/solo/signOff")
-    public Result signOffSoloContest(@NotNull Integer studentId, @NotNull Integer soloContestId){
+    public Result signOffSoloContest(@NotNull Integer soloContestId){
+        Integer studentId = this.getUserFromSession().getId();
         Integer code = this.soloContestService.signOff(studentId, soloContestId);
         return ResultTool.resp(code);
+    }
+
+    private Student getUserFromSession(){
+        Subject user = SecurityUtils.getSubject();
+        Session session = user.getSession();
+        return (Student)session.getAttribute(Constants.SESSION_USER);
     }
 }

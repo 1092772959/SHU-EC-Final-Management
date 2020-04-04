@@ -12,7 +12,7 @@ public interface SoloContestDao {
 
     SoloContest findById(Integer id);
 
-    List<SoloContest> findByName(String contestTitle);
+    List<SoloContest> findByName(String title);
 
     //查看该校报名该场比赛的人数
     Integer findNumByContestAndSchool(Integer soloContestId, Integer schoolId);

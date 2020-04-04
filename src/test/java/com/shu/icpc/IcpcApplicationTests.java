@@ -4,9 +4,11 @@ import com.shu.icpc.Component.MailService;
 import com.shu.icpc.dao.SchoolDao;
 import com.shu.icpc.entity.Contest;
 import com.shu.icpc.entity.School;
+import com.shu.icpc.entity.SoloContest;
 import com.shu.icpc.service.CoachService;
 import com.shu.icpc.service.ContestService;
 import com.shu.icpc.service.SignService;
+import com.shu.icpc.service.SoloContestService;
 import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.PasswordGenerateUtil;
 import com.shu.icpc.utils.TimeUtil;
@@ -17,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.io.FileNotFoundException;
@@ -62,6 +65,21 @@ public class IcpcApplicationTests {
         String emailAddr = "13120716616@163.com", title = "SHU_TEST", content = "asdasd";
         mailService.sendSimpleMail(emailAddr, title, content);
     }
+
+    @Test
+    public void genPassword(){
+        String pswd = PasswordGenerateUtil.getPassword("000", "19821260079", Constants.hashTime);
+        System.out.println(pswd);
+    }
+
+    @Test
+    public void addSolo(){
+        SoloContest soloContest = new SoloContest();
+
+    }
+
+    @Resource
+    private SoloContestService soloContestService;
 
 //    @Resource
 //    private StudentDao studentDao;

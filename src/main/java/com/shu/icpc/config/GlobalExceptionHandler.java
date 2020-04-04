@@ -82,7 +82,7 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(value = UnauthorizedException.class)
-    public Result UnauthorizedException(Exception e){
+        public Result UnauthorizedException(Exception e){
         return ResultTool.resp(Constants.UNAUTHORIZEDEXCEPTION_CODE, Constants.UNAUTHORIZEDEXCEPTION);
     }
 

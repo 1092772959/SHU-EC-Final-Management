@@ -114,6 +114,8 @@ public class SoloContestService extends CoreService{
             return Constants.FAIL;
         }
 
+        this.soloContestDao.signOffContest(stuId, soloContestId);
+
         //TODO send message to student
         return Constants.SUCCESS;
     }

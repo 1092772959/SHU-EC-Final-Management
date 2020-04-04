@@ -2,32 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shu.icpc.dao.SoloContestDao">
 
-    <select id = "findAll" resultType="Contest">
+    <select id = "findAll" resultType="SoloContest">
         select *
         from solo_contest
     </select>
 
-    <select id="findByName" resultType="Contest">
+    <select id="findByName" resultType="SoloContest">
         select *
         from solo_contest
-        where title like '%${contestTitle}%'
+        where title like '%${title}%'
     </select>
 
-    <select id="findById" resultType="Contest">
+    <select id="findById" resultType="SoloContest">
         select * from solo_contest where id = #{id}
     </select>
 
-    <select id="findByStudentId" resultType="Contest">
+    <select id="findByStudentId" resultType="SoloContest">
         select * from solo_contest
         where id in (
           select solo_contest_id from solo_contest_record where student_id = #{studentId}
         )
     </select>
 
-    <insert id="insert" parameterType="Contest">
+    <insert id="insert" parameterType="SoloContest">
         insert into solo_contest(title, start_time, end_time, sign_start_time, sign_end_time, school_id,
               chief, phone, email, num_max)
-        values (#{contestTitle}, #{startTime}, #{endTime}, #{signStartTime}, #{signEndTime}, #{schoolId},
+        values (#{title}, #{startTime}, #{endTime}, #{signStartTime}, #{signEndTime}, #{schoolId},
                 #{chief}, #{phone}, #{email}, #{numMax})
     </insert>
 
@@ -56,9 +56,9 @@
         select
         S.school_name as schoolName, S.abbr_name as abbrName,
         ST.stu_id as stuId, ST.stu_name as stuName, CONCAT(ST.family_name, ' ', ST.first_name) as stuForeignName,
-        ST.phone, ST.email, ST.sex as sex, ST.size as size,
+        ST.phone, ST.email, ST.sex as sex, ST.size as size
         from school as S, student as ST, solo_contest as C, solo_contest_record as R
-        where S.school_id = ST.school_id and ST.id = R.student_id and C.id = R.solo_contest_id
+        where S.id = ST.school_id and ST.id = R.student_id and C.id = R.solo_contest_id
             and C.id = #{soloContestId} and S.id = #{schoolId}
     </select>
 
@@ -66,9 +66,9 @@
         select
         S.school_name as schoolName, S.abbr_name as abbrName,
         ST.stu_id as stuId, ST.stu_name as stuName, CONCAT(ST.family_name, ' ', ST.first_name) as stuForeignName,
-        ST.phone, ST.email, ST.sex as sex, ST.size as size,
+        ST.phone, ST.email, ST.sex as sex, ST.size as size
         from school as S, student as ST, solo_contest as C, solo_contest_record as R
-        where S.school_id = ST.school_id and ST.id = R.student_id and C.id = R.solo_contest_id
+        where S.id = ST.school_id and ST.id = R.student_id and C.id = R.solo_contest_id
             and C.id = #{soloContestId}
     </select>
 
