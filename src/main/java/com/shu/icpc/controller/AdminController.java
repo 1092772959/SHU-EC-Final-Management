@@ -221,7 +221,7 @@ public class AdminController extends CoreController {
     public Result updateArticle(@NotNull Integer articleId, @NotBlank String content,
                                 @NotBlank String coverUrl, @NotBlank String intro) {
         Article article = null;
-        Integer code = this.articleService.set(articleId, content, coverUrl, article);
+        Integer code = this.articleService.set(articleId, content, coverUrl, intro, article);
         return ResultTool.resp(code, article);
     }
 

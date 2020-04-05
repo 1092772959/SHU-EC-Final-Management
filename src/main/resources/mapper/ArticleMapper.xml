@@ -37,6 +37,7 @@
         <trim prefix="set" suffixOverrides=",">
             <if test="content!=null">content = #{content},</if>
             <if test="coverUrl!=null">cover_url = #{coverUrl},</if>
+            <if test="intro!=null">intro = #{intro},</if>
             <if test="latestEditTime">latest_edit_time = #{latestEditTime}</if>
         </trim>
         where id = #{id}

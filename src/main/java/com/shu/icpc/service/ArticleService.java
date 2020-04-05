@@ -55,13 +55,14 @@ public class ArticleService extends CoreService {
         return Constants.SUCCESS;
     }
 
-    public Integer set(Integer id, String content, String coverUrl, Article article){
+    public Integer set(Integer id, String content, String coverUrl, String intro, Article article){
         article = this.getById(id);
         if(article == null){
             return Constants.ARTICLE_NO_EXISTS;
         }
         article.setContent(content);
         article.setCoverUrl(coverUrl);
+        article.setIntro(intro);
         Date latest = new Date();
         article.setLatestEditTime(latest);
         Integer code = this.articleDao.update(article);
