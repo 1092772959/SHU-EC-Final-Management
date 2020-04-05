@@ -32,5 +32,8 @@ public class CoreController {
     protected SoloContestService soloContestService;
 
     @Resource
+    protected ArticleService articleService;
+
+    @Resource
     protected OSSService ossService;
 }

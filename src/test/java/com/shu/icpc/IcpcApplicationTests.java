@@ -2,7 +2,9 @@ package com.shu.icpc;
 
 import com.shu.icpc.Component.MailService;
 import com.shu.icpc.Component.OSSService;
+import com.shu.icpc.dao.ArticleDao;
 import com.shu.icpc.dao.SchoolDao;
+import com.shu.icpc.entity.Article;
 import com.shu.icpc.entity.Contest;
 import com.shu.icpc.entity.School;
 import com.shu.icpc.entity.SoloContest;
@@ -89,6 +91,49 @@ public class IcpcApplicationTests {
     @Test
     public void testOSSSerivice() {
         System.out.println(this.ossService.getToken());
+    }
+
+    @Resource
+    private ArticleDao articleDao;
+
+    @Test
+    public void testArticle(){
+        Article article = new Article();
+        article.setLatestEditTime(new Date());
+        article.setStatus(2);
+        article.setCoverUrl("http://");
+        article.setAdminId(18);
+        article.setTag(0);
+        article.setTitle("测试文章");
+        int code;
+        code = articleDao.insert(article);
+        System.out.println(article.getId());
+
+
+        article.setStatus(1);
+        code = articleDao.updateStatus(article.getId(), 1);
+        System.out.println(code);
+
+        article.setIntro("asdasd");
+        article.setContent("<html><html/>");
+
+        code = articleDao.update(article);
+        System.out.println(code);
+
+    }
+
+    @Test
+    public void deleteArticle(){
+        int code = articleDao.delete(6);
+        //return value is 0: false or 1: true
+        System.out.println(code);
+    }
+
+    @Test
+    public void updateArticle(){
+        int code = articleDao.updateStatus(7, 3);
+        //return value is 0 or 1
+        System.out.println(code);
     }
 
 //    @Resource

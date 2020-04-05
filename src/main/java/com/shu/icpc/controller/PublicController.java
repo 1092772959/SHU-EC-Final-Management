@@ -1,10 +1,7 @@
 package com.shu.icpc.controller;
 
 import com.shu.icpc.dao.ContestDao;
-import com.shu.icpc.entity.Coach;
-import com.shu.icpc.entity.School;
-import com.shu.icpc.entity.SoloContest;
-import com.shu.icpc.entity.Student;
+import com.shu.icpc.entity.*;
 import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.Result;
 import com.shu.icpc.utils.ResultTool;
@@ -124,14 +121,21 @@ public class PublicController extends CoreController{
     }
 
     /**
-     * refresh oss client server for front-end app
+     * users who have not logged in have acess to articles
      * @return
      */
     @ResponseBody
-    @GetMapping
-    public Result refreshToken(){
-        String token = ossService.getToken();
-        return ResultTool.successGet(token);
+    @GetMapping("/article")
+    public Result getArticles(){
+        List<Article> res = this.articleService.getAll();
+        return ResultTool.successGet(res);
+    }
+
+    @ResponseBody
+    @GetMapping("/article/title")
+    public Result getArticlesLike(@NotBlank String titleLike){
+        List<Article> res = this.articleService.getTitleLike(titleLike);
+        return ResultTool.successGet(res);
     }
 
     /*

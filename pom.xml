@@ -117,6 +117,15 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.20.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+
             <!--&lt;!&ndash;添加mybatis generator maven插件&ndash;&gt;-->
             <!--<plugin>-->
                 <!--<groupId>org.mybatis.generator</groupId>-->

@@ -1,6 +1,7 @@
 package com.shu.icpc.controller;
 
 
+import com.shu.icpc.entity.Article;
 import com.shu.icpc.entity.SoloContest;
 import com.shu.icpc.utils.Result;
 import com.shu.icpc.utils.ResultTool;
@@ -26,6 +27,13 @@ public class CommonController extends CoreController{
         List<SoloContest> res = this.soloContestService.getAll();
         return ResultTool.successGet(res);
     }
+
+    @ResponseBody
+    @GetMapping("/oss/token")
+    public Result refreshToken(){
+        return ResultTool.successGet(ossService.getToken());
+    }
+
 
 
     

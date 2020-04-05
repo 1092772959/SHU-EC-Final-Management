@@ -95,6 +95,10 @@ public class Constants {
 
     public static final Integer QUOTA_LIMIT =  732;
 
+    //-----------------article related
+    public static final Integer ARTICLE_NO_EXISTS = 740;
+
+    public static final Integer CHECK_ILLEGAL_CODE = 704;
 
     public static final String ADMIN = "admin";
 

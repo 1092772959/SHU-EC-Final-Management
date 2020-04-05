@@ -41,5 +41,8 @@ public class CoreService {
     protected StudentService studentService;
 
     @Resource
+    protected ArticleDao articleDao;
+
+    @Resource
     protected RedisTemplate redisTemplate;
 }
