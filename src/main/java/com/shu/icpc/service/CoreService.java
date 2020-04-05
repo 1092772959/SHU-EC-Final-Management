@@ -36,12 +36,16 @@ public class CoreService {
     @Resource
     protected SoloContestDao soloContestDao;
 
+
+    @Resource
+    protected ArticleDao articleDao;
+
     //services
     @Resource
     protected StudentService studentService;
 
     @Resource
-    protected ArticleDao articleDao;
+    protected LoginService loginService;
 
     @Resource
     protected RedisTemplate redisTemplate;

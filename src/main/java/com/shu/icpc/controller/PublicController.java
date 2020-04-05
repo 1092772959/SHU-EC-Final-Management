@@ -126,8 +126,13 @@ public class PublicController extends CoreController{
      */
     @ResponseBody
     @GetMapping("/article")
-    public Result getArticles(){
-        List<Article> res = this.articleService.getAll();
+    public Result getArticles(Integer status){
+        List<Article> res = null;
+        if(status == null){
+            res = this.articleService.getAll();
+        }else{
+            res = this.articleService.getByStatus(status);
+        }
         return ResultTool.successGet(res);
     }
 

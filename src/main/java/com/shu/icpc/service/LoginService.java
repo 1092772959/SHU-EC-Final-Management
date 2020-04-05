@@ -83,4 +83,10 @@ public class LoginService extends CoreService {
         }
         return ResultTool.resp(Constants.FAIL);
     }
+
+    public Object getUserFromSession(){
+        Subject user = SecurityUtils.getSubject();
+        Session session = user.getSession();
+        return session.getAttribute(Constants.SESSION_USER);
+    }
 }

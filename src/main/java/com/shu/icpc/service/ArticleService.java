@@ -1,5 +1,6 @@
 package com.shu.icpc.service;
 
+import com.shu.icpc.entity.Admin;
 import com.shu.icpc.entity.Article;
 import com.shu.icpc.utils.Constants;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,23 @@ public class ArticleService extends CoreService {
     }
 
     public List<Article> getTitleLike(String titleLike){
+        List<Article> res = null;
+        Object user = this.loginService.getUserFromSession();
+
         if(titleLike.isEmpty()){
-            return this.articleDao.findAll();
+            if(user instanceof Admin){
+                res = this.articleDao.findAll();
+            }else{
+                res = this.articleDao.findByStatus(Constants.CHECK_STATUS_PASS);
+            }
+        }else{
+            if(user instanceof Admin){
+                res = this.articleDao.findByTitleLike(titleLike);
+            }else{
+                res = this.articleDao.findByTitleLikeAndStatus(titleLike, Constants.CHECK_STATUS_PASS);
+            }
         }
-        return this.articleDao.findByTitleLike(titleLike);
+        return res;
     }
 
     public Article getById(Integer id){
@@ -29,6 +43,24 @@ public class ArticleService extends CoreService {
 
     public List<Article> getByAdmin(Integer adminId){
         return this.articleDao.findByAdmin(adminId);
+    }
+
+    public List<Article> getByStatus(Integer status){
+        try{
+            assert(status == Constants.CHECK_STATUS_PASS || status == Constants.CHECK_STATUS_CHECKED
+                    || status == Constants.CHECK_STATUS_REJECTED);
+        }catch (Exception e){
+            return null;
+        }
+
+        if(status != Constants.CHECK_STATUS_PASS){
+            Object user = this.loginService.getUserFromSession();
+            //other users have no access to not passed articles
+            if(! (user instanceof Admin)){
+                return null;
+            }
+        }
+        return this.articleDao.findByStatus(status);
     }
 
     public Integer addArticle(Article article){

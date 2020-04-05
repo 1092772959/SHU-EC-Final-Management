@@ -5,6 +5,12 @@
         select *
         from article
     </select>
+
+    <select id="findByStatus" resultType="Article">
+        select *
+        from article
+        where status = #{status}
+    </select>
     
     <select id="findById" resultType="Article">
         select *
@@ -24,12 +30,18 @@
         where title like '%${titleLike}%'
     </select>
 
+    <select id="findByTitleLikeAndStatus" resultType="Article">
+        select *
+        from article
+        where status = #{status} and title like '%${titleLike}%'
+    </select>
+
     <insert id="insert" parameterType="Article">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into article(title, intro, status, content, cover_url, admin_id, latest_edit_time)
-        values(#{title}, #{intro}, #{status}, #{content}, #{coverUrl}, #{adminId}, #{latestEditTime})
+        insert into article(title, intro, status, content, cover_url, admin_id, latest_edit_time, tag)
+        values(#{title}, #{intro}, #{status}, #{content}, #{coverUrl}, #{adminId}, #{latestEditTime}, #{tag})
     </insert>
 
     <update id="update">

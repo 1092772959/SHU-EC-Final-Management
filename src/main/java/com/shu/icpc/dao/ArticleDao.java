@@ -12,6 +12,10 @@ public interface ArticleDao {
 
     List<Article> findByTitleLike(String titleLike);
 
+    List<Article> findByStatus(Integer status);
+
+    List<Article> findByTitleLikeAndStatus(String titleLike, Integer status);
+
     Article findById(Integer id);
 
     Integer insert(Article article);
