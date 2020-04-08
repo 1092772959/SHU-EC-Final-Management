@@ -35,5 +35,8 @@ public class CoreController {
     protected ArticleService articleService;
 
     @Resource
+    protected CredentialService credentialService;
+
+    @Resource
     protected OSSService ossService;
 }

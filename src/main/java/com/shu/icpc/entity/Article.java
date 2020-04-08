@@ -15,7 +15,6 @@ public class Article {
 
     private Integer status;
 
-    @NotNull
     private Date latestEditTime;
 
     private String content;

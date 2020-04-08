@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = {ConstraintViolationException.class, BindException.class, ValidationException.class})
     public Result ValidationException(Exception e){
-//        e.printStackTrace();
+        e.printStackTrace();
         return ResultTool.resp(Constants.VALIDATION_EMPTY_CODE,Constants.VALIDATION_EMPTY);
     }
 

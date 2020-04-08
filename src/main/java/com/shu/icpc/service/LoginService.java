@@ -64,13 +64,20 @@ public class LoginService extends CoreService {
 
     public Result adminLogin(String phone,String pswd) {
         Subject currentUser = SecurityUtils.getSubject();
+
         Admin admin = adminDao.findByPhone(phone);
-        if(admin == null)
+        if(admin == null) {
             return ResultTool.resp(Constants.LOGIN_NO_ACCOUNT_CODE);
+        }
+
+        admin.setPswd("");
+        Session session = currentUser.getSession();
+        session.setAttribute(Constants.SESSION_USER, admin);
+        session.setTimeout(Constants.COOKIE_TIMEOUT);
 
         ShiroToken token = new ShiroToken(phone, pswd, ShiroToken.Type.Admin);
         currentUser.login(token);
-        return ResultTool.success();
+        return ResultTool.resp(Constants.SUCCESS, admin);
     }
 
     public Result logout() {

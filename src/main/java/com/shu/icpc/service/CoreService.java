@@ -1,9 +1,11 @@
 package com.shu.icpc.service;
 
 import com.shu.icpc.Component.MailService;
+import com.shu.icpc.Component.OSSService;
 import com.shu.icpc.dao.*;
 import com.shu.icpc.entity.Student;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 
@@ -36,9 +38,14 @@ public class CoreService {
     @Resource
     protected SoloContestDao soloContestDao;
 
-
     @Resource
     protected ArticleDao articleDao;
+
+    @Resource
+    protected TeamCredentialDao teamCredentialDao;
+
+    @Resource
+    protected BucketDao bucketDao;
 
     //services
     @Resource
@@ -46,6 +53,9 @@ public class CoreService {
 
     @Resource
     protected LoginService loginService;
+
+    @Resource
+    protected OSSService ossService;
 
     @Resource
     protected RedisTemplate redisTemplate;

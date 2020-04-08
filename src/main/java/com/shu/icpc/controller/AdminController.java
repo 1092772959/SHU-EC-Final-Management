@@ -19,8 +19,11 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipInputStream;
 
 @RequiresRoles("admin")
 @RequestMapping("/api/admin")
@@ -217,11 +220,54 @@ public class AdminController extends CoreController {
     }
 
     @ResponseBody
+    @GetMapping("/article")
+    public Result getArticlesByAdmin() {
+        Admin admin = (Admin) loginService.getUserFromSession();
+        if (admin == null) {
+            return ResultTool.successGet(null);
+        }
+        Integer adminId = admin.getId();
+        return ResultTool.successGet(this.articleService.getByAdmin(adminId));
+    }
+
+    @ResponseBody
+    @PostMapping("/article/update")
+    public Result updateArticle_v2(@NotNull Integer articleId, @NotBlank String content,
+                                @NotBlank String coverUrl, @NotBlank String intro) {
+        Article article = null;
+        Admin admin = (Admin)loginService.getUserFromSession();
+        Integer code = this.articleService.set(articleId, content, coverUrl, intro, admin.getId(), article);
+        return ResultTool.resp(code, article);
+    }
+
+
+    @ResponseBody
+    @PostMapping("/article/status")
+    public Result updateStatus_v2(@NotNull Integer articleId, @NotNull Integer status) {
+        Integer code = this.articleService.updateStatus(articleId, status);
+        return ResultTool.resp(code);
+    }
+
+
+    @ResponseBody
+    @PostMapping("/article/delete")
+    public Result deleteArticle_v2(@NotNull Integer articleId){
+        Admin admin = (Admin) loginService.getUserFromSession();
+        int code = this.articleService.delete(articleId, admin.getId());
+        return ResultTool.resp(code);
+    }
+
+    /**
+     * deprecated
+     */
+
+    @ResponseBody
     @PutMapping("/article")
     public Result updateArticle(@NotNull Integer articleId, @NotBlank String content,
                                 @NotBlank String coverUrl, @NotBlank String intro) {
         Article article = null;
-        Integer code = this.articleService.set(articleId, content, coverUrl, intro, article);
+        Admin admin = (Admin)loginService.getUserFromSession();
+        Integer code = this.articleService.set(articleId, content, coverUrl, intro, admin.getId(), article);
         return ResultTool.resp(code, article);
     }
 
@@ -233,19 +279,34 @@ public class AdminController extends CoreController {
     }
 
     @ResponseBody
-    @GetMapping("/article/self")
-    public Result getArticlesByAdmin() {
-        Admin admin = getUserFromSession();
-        if (admin == null) {
-            return ResultTool.successGet(null);
-        }
-        Integer adminId = admin.getId();
-        return ResultTool.successGet(this.articleService.getByAdmin(adminId));
+    @DeleteMapping("/article")
+    public Result deleteArticle(@NotNull Integer articleId){
+        Admin admin = (Admin) loginService.getUserFromSession();
+        int code = this.articleService.delete(articleId, admin.getId());
+        return ResultTool.resp(code);
     }
 
-    private Admin getUserFromSession() {
-        Subject user = SecurityUtils.getSubject();
-        Session session = user.getSession();
-        return (Admin) session.getAttribute(Constants.SESSION_USER);
+    /**
+     * credential related
+     */
+
+    @ResponseBody
+    @PostMapping("/contest/credentials")
+    public Result addContestCredential(@NotNull MultipartFile file, @NotNull Integer contestId){
+        ZipInputStream zipFile = null;
+        try {
+            zipFile = new ZipInputStream(file.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResultTool.resp(Constants.FAIL);
+        }
+        List<Map<String, String>> failedList = new ArrayList<>();
+        List<String> successList = new ArrayList<>();
+
+        int code = credentialService.saveContestCredential(zipFile, contestId, failedList, successList);
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", successList);
+        resp.put("fail", failedList);
+        return ResultTool.resp(code, resp);
     }
 }

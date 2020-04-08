@@ -17,6 +17,13 @@ public class ResultTool {
         return result;
     }
 
+    public static Result get(int code, Object data){
+        Result result = new Result();
+        result.setStatus(code);
+        result.setData(data);
+        return result;
+    }
+
     public static Result success(){
         Result result = new Result();
         result.setStatus(Constants.SUCCESS);

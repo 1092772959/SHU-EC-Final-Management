@@ -1,7 +1,11 @@
 package com.shu.icpc.utils;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class Constants {
     public static final Integer hashTime = 1024;
+
+    public static final Integer RETRY_TIME = 3;
 
     //-------------通用
     public static final Integer SUCCESS = 600;      //修改操作成功
@@ -86,7 +90,7 @@ public class Constants {
 
     public static final Integer TIME_ERROR = 723;
 
-    public static final Integer NO_RECORD = 724;  //no sign in record to delete
+    public static final Integer SOLO_NO_RECORD = 724;  //no sign in record to delete
 
     //-----------------team contest related
     public static final Integer SIGN_IN_NO_TEAM = 730;  // no such team
@@ -98,7 +102,25 @@ public class Constants {
     //-----------------article related
     public static final Integer ARTICLE_NO_EXISTS = 740;
 
+    public static final Integer ARTICLE_NO_ACCESS = 741;
+
     public static final Integer CHECK_ILLEGAL_CODE = 704;
+
+    //-----------------upload credential related
+    public static final String MSG_ZIP_FILE_ILLEGAL = "unzip file error";
+
+    public static final String MSG_FILE_NAME_NO_TEAM = "the file name has no team id mapping";
+
+    public static final String MSG_OSS_FAILED = "push to qiniu oss failed";
+
+    public static final String MSG_NAME_NOT_NUMBER = "file name is not a team id number";
+
+    @Value("${oss.bucket.private}")
+    public static String BUCKET_PRIVATE;
+
+    @Value("${oss.bucket}")
+    public static String BUCKET_PUBLIC;
+
 
     public static final String ADMIN = "admin";
 

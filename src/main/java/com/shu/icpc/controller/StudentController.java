@@ -56,7 +56,8 @@ public class StudentController extends CoreController{
 
     @ResponseBody
     @PostMapping("/password")
-    public Result changePassword(@NotNull Integer studentId, @NotBlank String oldPassword, @NotBlank String newPassword){
+    public Result changePassword(@NotNull Integer studentId, @NotBlank String oldPassword,
+                                 @NotBlank String newPassword){
         int code = studentService.setPassword(studentId, oldPassword, newPassword);
         return ResultTool.resp(code);
     }
@@ -71,35 +72,55 @@ public class StudentController extends CoreController{
     /**
      * solo contest related
      */
-
     @ResponseBody
-    @GetMapping("/mySolo")
+    @GetMapping("/solo")
     public Result getRegisteredSoloContests(){
-        Integer studentId = this.getUserFromSession().getId();
+        Student student = (Student)loginService.getUserFromSession();
+        if(student == null){
+            return ResultTool.resp(Constants.UNAUTHENTICATE);
+        }
+        Integer studentId = student.getId();
         List<SoloContest> res = soloContestService.getByStuId(studentId);
         return ResultTool.successGet(res);
     }
 
     @ResponseBody
-    @PostMapping("/solo/signIn")
+    @PostMapping("/solo/sign")
     public Result signInSoloContest(@NotNull Integer soloContestId,
                                     @NotNull Integer isStarred){
-        Integer studentId = this.getUserFromSession().getId();
+        Student student = (Student)loginService.getUserFromSession();
+        if(student == null){
+            return ResultTool.resp(Constants.UNAUTHENTICATE);
+        }
+        Integer studentId = student.getId();
         Integer code = this.soloContestService.signIn(studentId, soloContestId, isStarred);
         return ResultTool.resp(code);
     }
 
     @ResponseBody
     @PostMapping("/solo/signOff")
-    public Result signOffSoloContest(@NotNull Integer soloContestId){
-        Integer studentId = this.getUserFromSession().getId();
+    public Result signOffSoloContest_v2(@NotNull Integer soloContestId){
+        Student student = (Student)loginService.getUserFromSession();
+        if(student == null){
+            return ResultTool.resp(Constants.UNAUTHENTICATE);
+        }
+        Integer studentId = student.getId();
         Integer code = this.soloContestService.signOff(studentId, soloContestId);
         return ResultTool.resp(code);
     }
 
-    private Student getUserFromSession(){
-        Subject user = SecurityUtils.getSubject();
-        Session session = user.getSession();
-        return (Student)session.getAttribute(Constants.SESSION_USER);
+    /**
+     * deprecated
+     */
+    @ResponseBody
+    @DeleteMapping("/solo/sign")
+    public Result signOffSoloContest(@NotNull Integer soloContestId){
+        Student student = (Student)loginService.getUserFromSession();
+        if(student == null){
+            return ResultTool.resp(Constants.UNAUTHENTICATE);
+        }
+        Integer studentId = student.getId();
+        Integer code = this.soloContestService.signOff(studentId, soloContestId);
+        return ResultTool.resp(code);
     }
 }

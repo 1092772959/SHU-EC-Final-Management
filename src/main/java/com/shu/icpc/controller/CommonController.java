@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RequestMapping("/api")
@@ -30,11 +29,9 @@ public class CommonController extends CoreController{
 
     @ResponseBody
     @GetMapping("/oss/token")
-    public Result refreshToken(){
-        return ResultTool.successGet(ossService.getToken());
+    public Result refreshToken(@NotBlank String bucket){
+        String token = ossService.getToken(bucket);
+        return ResultTool.successGet(ossService.getToken(bucket));
     }
 
-
-
-    
 }

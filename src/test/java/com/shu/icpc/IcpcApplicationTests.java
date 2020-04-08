@@ -26,10 +26,13 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.ZipInputStream;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -72,14 +75,13 @@ public class IcpcApplicationTests {
 
     @Test
     public void genPassword(){
-        String pswd = PasswordGenerateUtil.getPassword("000", "19821260079", Constants.hashTime);
+        String pswd = PasswordGenerateUtil.getPassword("123456", "11011111111", Constants.hashTime);
         System.out.println(pswd);
     }
 
     @Test
     public void addSolo(){
         SoloContest soloContest = new SoloContest();
-
     }
 
     @Resource
@@ -90,7 +92,7 @@ public class IcpcApplicationTests {
 
     @Test
     public void testOSSSerivice() {
-        System.out.println(this.ossService.getToken());
+        System.out.println(this.ossService.getToken(Constants.BUCKET_PRIVATE));
     }
 
     @Resource
@@ -134,6 +136,18 @@ public class IcpcApplicationTests {
         int code = articleDao.updateStatus(7, 3);
         //return value is 0 or 1
         System.out.println(code);
+    }
+
+    @Test
+    public void testZip(){
+        String path = "/Users/lixiuwen/Downloads/icpc_test/ICPC-EC-FINAL.zip";
+        //File file = new File("/Users/lixiuwen/Downloads/test/zip");
+        try {
+            ZipInputStream zip = new ZipInputStream(new FileInputStream(path));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 //    @Resource

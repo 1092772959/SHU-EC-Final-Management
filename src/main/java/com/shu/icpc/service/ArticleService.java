@@ -6,6 +6,7 @@ import com.shu.icpc.utils.Constants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -64,9 +65,10 @@ public class ArticleService extends CoreService {
     }
 
     public Integer addArticle(Article article){
-        if(article.getCoverUrl().isEmpty()){
+        if(article.getCoverUrl() == null){
             article.setCoverUrl("http://q7wdge0nf.bkt.clouddn.com/");
         }
+        article.setLatestEditTime(Calendar.getInstance().getTime());
         article.setStatus(Constants.CHECK_STATUS_CHECKED);
         this.articleDao.insert(article);
         return Constants.SUCCESS;
@@ -87,24 +89,36 @@ public class ArticleService extends CoreService {
         return Constants.SUCCESS;
     }
 
-    public Integer set(Integer id, String content, String coverUrl, String intro, Article article){
+    public Integer set(Integer id, String content, String coverUrl, String intro,
+                       Integer adminId, Article article) {
         article = this.getById(id);
         if(article == null){
             return Constants.ARTICLE_NO_EXISTS;
+        }
+        if(article.getAdminId() != adminId) {
+            return Constants.ARTICLE_NO_ACCESS;
         }
         article.setContent(content);
         article.setCoverUrl(coverUrl);
         article.setIntro(intro);
         Date latest = new Date();
         article.setLatestEditTime(latest);
-        Integer code = this.articleDao.update(article);
+        int code = this.articleDao.update(article);
         if(code == 0){
             return Constants.ARTICLE_NO_EXISTS;
         }
         return Constants.SUCCESS;
     }
 
-    public Integer delete(Integer id){
+    public Integer delete(Integer id, Integer adminId){
+        Article article = this.articleDao.findById(id);
+        if(article  == null){
+            return Constants.ARTICLE_NO_EXISTS;
+        }
+        if(article.getAdminId() != adminId){
+            return Constants.ARTICLE_NO_ACCESS;
+        }
+
         Integer code = this.articleDao.delete(id);
         if(code == 0){
             return Constants.ARTICLE_NO_EXISTS;
