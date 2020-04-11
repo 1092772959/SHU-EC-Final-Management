@@ -4,6 +4,6 @@
 
     <select id="findByName" resultType="Bucket">
         select * from bucket
-        where name = #{name}
+        where `bucket` = #{bucket}
     </select>
 </mapper>

@@ -14,16 +14,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 @RequiresRoles("admin")
 @RequestMapping("/api/admin")
@@ -292,7 +294,7 @@ public class AdminController extends CoreController {
 
     @ResponseBody
     @PostMapping("/contest/credentials")
-    public Result addContestCredential(@NotNull MultipartFile file, @NotNull Integer contestId){
+    public Result addTeamCredential(@NotNull MultipartFile file, @NotNull Integer contestId){
         ZipInputStream zipFile = null;
         try {
             zipFile = new ZipInputStream(file.getInputStream());
@@ -308,5 +310,22 @@ public class AdminController extends CoreController {
         resp.put("success", successList);
         resp.put("fail", failedList);
         return ResultTool.resp(code, resp);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/contest/credentials")
+    public Result getTeamCredentials(@NotEmpty @RequestParam("ids") List<Integer> credentialIds, HttpServletResponse response){
+
+        ZipOutputStream zos = null;
+        try {
+            zos = new ZipOutputStream(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int code = credentialService.downLoadTeamCredential(credentialIds, zos);
+
+        response.setContentType("application/zip");
+        response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
+        return ResultTool.resp(code);
     }
 }

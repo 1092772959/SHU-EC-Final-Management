@@ -106,14 +106,21 @@ public class Constants {
 
     public static final Integer CHECK_ILLEGAL_CODE = 704;
 
+    //-----------------credentials related
+    public static final Integer ZIP_ERROR = 750;
+
+    public static final Integer CREDENTIAL_NOT_EXISTS = 751;
+
     //-----------------upload credential related
-    public static final String MSG_ZIP_FILE_ILLEGAL = "unzip file error";
+    public static final String MSG_ZIP_FILE_ILLEGAL = "Unzip file error, check this file before";
 
-    public static final String MSG_FILE_NAME_NO_TEAM = "the file name has no team id mapping";
+    public static final String MSG_FILE_NAME_NO_TEAM = "The file name has no team id mapping";
 
-    public static final String MSG_OSS_FAILED = "push to qiniu oss failed";
+    public static final String MSG_OSS_FAILED = "Push to qiniu oss failed";
 
-    public static final String MSG_NAME_NOT_NUMBER = "file name is not a team id number";
+    public static final String MSG_NAME_NOT_NUMBER = "File name is not a team id number";
+
+    public static final String MSG_CREDENTIAL_EXISTS = "This credential file has already existed in the system";
 
     @Value("${oss.bucket.private}")
     public static String BUCKET_PRIVATE;

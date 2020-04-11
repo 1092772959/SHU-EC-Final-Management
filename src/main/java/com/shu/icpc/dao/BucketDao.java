@@ -4,5 +4,5 @@ import com.shu.icpc.entity.Bucket;
 
 public interface BucketDao {
 
-    Bucket findByName(String name);
+    Bucket findByName(String bucket);
 }
