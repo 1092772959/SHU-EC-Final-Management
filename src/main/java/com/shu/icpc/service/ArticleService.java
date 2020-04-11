@@ -115,9 +115,10 @@ public class ArticleService extends CoreService {
         if(article  == null){
             return Constants.ARTICLE_NO_EXISTS;
         }
+        /*
         if(article.getAdminId() != adminId){
             return Constants.ARTICLE_NO_ACCESS;
-        }
+        }*/
 
         Integer code = this.articleDao.delete(id);
         if(code == 0){

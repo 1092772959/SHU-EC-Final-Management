@@ -24,6 +24,16 @@ import java.util.zip.ZipOutputStream;
 @Transactional
 public class CredentialService extends CoreService {
 
+    public List<TeamCredential> getTeamCredentialInfo(Integer contestId){
+        List<TeamCredential> res = teamCredentialDao.findByContest(contestId);
+        return res;
+    }
+
+    public List<TeamCredential> getTeamCredentiaInfo(Integer contestId, Integer schoolId){
+        List<TeamCredential> res = teamCredentialDao.findByContestAndSchool(contestId, schoolId);
+        return res;
+    }
+
     public Integer saveContestCredential(ZipInputStream zipFile, Integer contestId,
                                          List<Map<String, String>> failedList,
                                          List<String> successList) {
@@ -167,7 +177,7 @@ public class CredentialService extends CoreService {
     }
 
 
-    public Integer downLoadTeamCredential(List<Integer> ids, ZipOutputStream zipOutputStream) {
+    public Integer getLoadTeamCredentialAsZip(List<Integer> ids, ZipOutputStream zipOutputStream) {
         //TODO: return a zipFile
 
         /*

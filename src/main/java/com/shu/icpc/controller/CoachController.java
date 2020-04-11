@@ -257,4 +257,8 @@ public class CoachController extends CoreController {
         Session session = user.getSession();
         return (Coach)session.getAttribute(Constants.SESSION_USER);
     }
+
+    /**
+     * credential related
+     */
 }

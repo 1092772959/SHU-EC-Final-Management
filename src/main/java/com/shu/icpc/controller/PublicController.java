@@ -10,9 +10,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.List;
+import java.util.zip.ZipOutputStream;
 
 @RequestMapping("/api/user")
 @Controller

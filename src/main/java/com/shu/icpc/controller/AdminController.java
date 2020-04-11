@@ -311,21 +311,4 @@ public class AdminController extends CoreController {
         resp.put("fail", failedList);
         return ResultTool.resp(code, resp);
     }
-
-    @ResponseBody
-    @GetMapping(value = "/contest/credentials")
-    public Result getTeamCredentials(@NotEmpty @RequestParam("ids") List<Integer> credentialIds, HttpServletResponse response){
-
-        ZipOutputStream zos = null;
-        try {
-            zos = new ZipOutputStream(response.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int code = credentialService.downLoadTeamCredential(credentialIds, zos);
-
-        response.setContentType("application/zip");
-        response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
-        return ResultTool.resp(code);
-    }
 }
