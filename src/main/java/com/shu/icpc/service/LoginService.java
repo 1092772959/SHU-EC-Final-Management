@@ -83,8 +83,10 @@ public class LoginService extends CoreService {
     public Result logout() {
         //shiro登出
         Subject subject = SecurityUtils.getSubject();
+
         if (subject.isAuthenticated()) {
-            System.out.println(subject.getPrincipal() + " logout");
+            Session session = subject.getSession();
+            session.removeAttribute(Constants.SESSION_USER);
             subject.logout();
             return ResultTool.resp(Constants.LOGIN_SUCCESS_CODE);
         }

@@ -8,6 +8,12 @@ import java.util.zip.ZipInputStream;
 
 public class ZipUtil {
 
+    /**
+     * get single file in zip
+     * @param zipFile
+     * @param res
+     * @return
+     */
     public static int extractFiles(ZipInputStream zipFile, Map<String, byte[]> res){
         byte[] buffer = new byte[1024];
         try{

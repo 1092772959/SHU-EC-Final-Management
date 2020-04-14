@@ -114,7 +114,7 @@ public class Constants {
     //-----------------upload credential related
     public static final String MSG_ZIP_FILE_ILLEGAL = "Unzip file error, check this file before";
 
-    public static final String MSG_FILE_NAME_NO_TEAM = "The file name has no team id mapping";
+    public static final String MSG_FILE_NAME_NO_MAPPING = "The file name has no id mapping";
 
     public static final String MSG_OSS_FAILED = "Push to qiniu oss failed";
 

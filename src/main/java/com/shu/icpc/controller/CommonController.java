@@ -1,10 +1,14 @@
 package com.shu.icpc.controller;
 
 
+import com.shu.icpc.Component.CredentialNameGetter;
+import com.shu.icpc.Component.credential.SoloCredentialNameGetter;
+import com.shu.icpc.Component.credential.TeamCredentialNameGetter;
 import com.shu.icpc.entity.*;
 import com.shu.icpc.service.LoginService;
 import com.shu.icpc.utils.Result;
 import com.shu.icpc.utils.ResultTool;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +56,7 @@ public class CommonController extends CoreController{
             res = credentialService.getTeamCredentialInfo(contestId);
         }else if(user instanceof Coach){
             Coach ch = (Coach)user;
-            res = credentialService.getTeamCredentiaInfo(contestId, ch.getSchoolId());
+            res = credentialService.getTeamCredentialInfo(contestId, ch.getSchoolId());
         }
         return ResultTool.successGet(res);
     }
@@ -70,7 +74,7 @@ public class CommonController extends CoreController{
         int code = credentialService.getLoadTeamCredentialAsZip(credentialIds, zos);
 
         response.setContentType("application/zip");
-        response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
+        response.addHeader("Content-Disposition", "attachment; filename=\"Proofs.zip\"");
         return ResultTool.resp(code);
     }
 
@@ -82,4 +86,45 @@ public class CommonController extends CoreController{
         return ResultTool.resp(code, url.toString());
     }
 
+    /**
+     * solo credential related
+     */
+    @ResponseBody
+    @GetMapping("/solo/credentials")
+    public Result getSoloCredentials(@NotEmpty @RequestParam("ids") List<Integer> credentialIds,
+                                     HttpServletResponse response){
+        ZipOutputStream zos = null;
+        try {
+            zos = new ZipOutputStream(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int code = credentialService.getSoloCredentialAsZip(credentialIds, zos);
+
+        response.setContentType("application/zip");
+        response.addHeader("Content-Disposition", "attachment; filename=\"Proofs.zip\"");
+        return ResultTool.resp(code);
+    }
+
+    @ResponseBody
+    @GetMapping("/solo/credential")
+    public Result getSoloCredentialUrl(@NotNull Integer id){
+        StringBuilder url = new StringBuilder();
+        int code = this.credentialService.getSoloCredentialUrl(id, url);
+        return ResultTool.resp(code, url.toString());
+    }
+
+    @ResponseBody
+    @GetMapping("/solo/credential/info")
+    public Result getSoloCredentialInfo(@NotNull Integer soloContestId){
+        Object user = loginService.getUserFromSession();
+        List<SoloCredential> res = null;
+        if(user instanceof Admin){
+            res = credentialService.getSoloCredentialInfo(soloContestId);
+        }else if(user instanceof Coach){
+            Coach ch = (Coach)user;
+            res = credentialService.getSoloCredentialInfo(soloContestId, ch.getSchoolId());
+        }
+        return ResultTool.successGet(res);
+    }
 }

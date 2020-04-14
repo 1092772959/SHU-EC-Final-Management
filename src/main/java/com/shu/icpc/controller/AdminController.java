@@ -289,7 +289,7 @@ public class AdminController extends CoreController {
     }
 
     /**
-     * credential related
+     * team credential related
      */
 
     @ResponseBody
@@ -306,6 +306,29 @@ public class AdminController extends CoreController {
         List<String> successList = new ArrayList<>();
 
         int code = credentialService.saveContestCredential(zipFile, contestId, failedList, successList);
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", successList);
+        resp.put("fail", failedList);
+        return ResultTool.resp(code, resp);
+    }
+
+    /**
+     * solo credential related
+     */
+    @ResponseBody
+    @PostMapping("/solo/credentials")
+    public Result addSoloCredentials(@NotNull MultipartFile file, @NotNull Integer soloContestId){
+        ZipInputStream zipFile = null;
+        try {
+            zipFile = new ZipInputStream(file.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResultTool.resp(Constants.FAIL);
+        }
+        List<Map<String, String>> failedList = new ArrayList<>();
+        List<String> successList = new ArrayList<>();
+
+        int code = credentialService.saveSoloCredential(zipFile, soloContestId, failedList, successList);
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", successList);
         resp.put("fail", failedList);

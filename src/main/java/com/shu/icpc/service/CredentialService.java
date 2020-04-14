@@ -1,8 +1,10 @@
 package com.shu.icpc.service;
 
+import com.shu.icpc.Component.CredentialNameGetter;
 import com.shu.icpc.entity.*;
 import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.FileUtil;
+import com.shu.icpc.utils.HTTPUtil;
 import com.shu.icpc.utils.ZipUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,20 +26,38 @@ import java.util.zip.ZipOutputStream;
 @Transactional
 public class CredentialService extends CoreService {
 
+    private void appendMsgElem(List<Map<String, String>> list, String fileName, String msg){
+        Map<String, String > elem = new HashMap<>();
+        elem.put("fileName:", fileName);
+        elem.put("error", msg);
+        list.add(elem);
+    }
+
     public List<TeamCredential> getTeamCredentialInfo(Integer contestId){
         List<TeamCredential> res = teamCredentialDao.findByContest(contestId);
         return res;
     }
 
-    public List<TeamCredential> getTeamCredentiaInfo(Integer contestId, Integer schoolId){
+    public List<TeamCredential> getTeamCredentialInfo(Integer contestId, Integer schoolId){
         List<TeamCredential> res = teamCredentialDao.findByContestAndSchool(contestId, schoolId);
         return res;
+    }
+
+    public List<SoloCredential> getSoloCredentialInfo(Integer soloId){
+        return soloCredentialDao.findBySoloContest(soloId);
+    }
+
+    public List<SoloCredential> getSoloCredentialInfo(Integer soloId, Integer schoolId){
+        return soloCredentialDao.findBySoloContestAndSchool(soloId, schoolId);
     }
 
     public Integer saveContestCredential(ZipInputStream zipFile, Integer contestId,
                                          List<Map<String, String>> failedList,
                                          List<String> successList) {
         Contest contest = contestDao.findById(contestId);
+        if(contest == null){
+            return Constants.FAIL;
+        }
 
         Map<String, byte[]> map = new HashMap<>();
         int code = ZipUtil.extractFiles(zipFile, map);
@@ -62,10 +82,7 @@ public class CredentialService extends CoreService {
             try{
                 teamId = Integer.parseInt(teamIdStr);
             }catch(NumberFormatException e){
-                Map<String, String> elem = new HashMap<>();
-                elem.put("fileName", fileName);
-                elem.put("error", Constants.MSG_NAME_NOT_NUMBER);
-                failedList.add(elem);
+                this.appendMsgElem(failedList, fileName, Constants.MSG_NAME_NOT_NUMBER);
                 continue;
             }
 
@@ -73,19 +90,13 @@ public class CredentialService extends CoreService {
 
             //make sure unique
             if (team == null) {
-                Map<String, String> elem = new HashMap<>();
-                elem.put("fileName", fileName);
-                elem.put("error", Constants.MSG_CREDENTIAL_EXISTS);
-                failedList.add(elem);
+                this.appendMsgElem(failedList, fileName, Constants.MSG_FILE_NAME_NO_MAPPING);
                 continue;
             }
 
             TeamCredential tmp = teamCredentialDao.findByContestAndTeam(contestId, teamId);
             if(tmp != null){
-                Map<String, String> elem = new HashMap<>();
-                elem.put("fileName", fileName);
-                elem.put("error", Constants.MSG_NAME_NOT_NUMBER);
-                failedList.add(elem);
+                this.appendMsgElem(failedList, fileName, Constants.MSG_NAME_NOT_NUMBER);
                 continue;
             }
 
@@ -98,17 +109,12 @@ public class CredentialService extends CoreService {
             key.append(school.getSchoolName());
             key.append("-");
             key.append(team.getTeamName());
-            System.out.println(key);
 
             StringBuilder resp = new StringBuilder();   // url base if success else error message
             code = ossService.uploadBytes(key.toString(), bytes, ossService.BUCKET_PRIVATE, resp);
 
             if (code != 0) {
-                System.out.println("tos failed");
-                Map<String, String> elem = new HashMap<>();
-                elem.put("fileName", entry.getKey());
-                elem.put("error", resp.toString());
-                failedList.add(elem);
+                this.appendMsgElem(failedList, fileName, resp.toString());
                 continue;
             }
 
@@ -151,36 +157,13 @@ public class CredentialService extends CoreService {
         if(code != Constants.SUCCESS){
             return null;
         }
-        URL url = null;
-        byte[] res = null;
-        try {
-            url = new URL(sb.toString());
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-            conn.setConnectTimeout(6 * 1000);
-            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
-            InputStream inputStream = conn.getInputStream();
-            res = FileUtil.readInputStream(inputStream);
-            /*
-            // failed version: downloaded file cannot be opened as pdf
-            int length = url.openConnection().getContentLength();
-            InputStream is = url.openStream();
-            res = new byte[length];
-            is.read(res);
-            is.close();
-            */
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        byte[] res = HTTPUtil.getByteFrom(sb.toString());
         return res;
     }
 
-
-    public Integer getLoadTeamCredentialAsZip(List<Integer> ids, ZipOutputStream zipOutputStream) {
-        //TODO: return a zipFile
-
-        /*
+    public Integer getLoadTeamCredentialAsZip(List<Integer> ids,
+                                              ZipOutputStream zipOutputStream) {
+        /* for test only
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(new File("/Users/lixiuwen/Downloads/icpc_test/test.zip"));
@@ -204,7 +187,7 @@ public class CredentialService extends CoreService {
                 //TODO: add error resp msg
                 continue;
             }
-            /*
+            /* for test only
             File f = new File("/Users/lixiuwen/Downloads/icpc_test/gao.pdf");
             try {
                 FileOutputStream fos_2 = new FileOutputStream(f);
@@ -214,11 +197,11 @@ public class CredentialService extends CoreService {
             } catch (IOException e) {
                 e.printStackTrace();
             }*/
-
             TeamCredential tc = teamCredentialDao.findById(id);
-            System.out.println(tc.getName());
+            String name = tc.getName();
 
-            ZipEntry zipEntry = new ZipEntry(base + tc.getName() + ".pdf");
+            //TODO: currently fixed as pdf format, allow more in the future
+            ZipEntry zipEntry = new ZipEntry(base + name + ".pdf");
 
             try {
                 zipOutputStream.putNextEntry(zipEntry);
@@ -239,12 +222,153 @@ public class CredentialService extends CoreService {
     }
 
 
-    //TODO: solo parts (same logic)
+
+
+
+
+
+    /**
+     * soloCrendtial Related
+     */
     public Integer saveSoloCredential(ZipInputStream zipFile, Integer soloContestId,
-                                      List<Map<String, String>> failedName, List<String> successList) {
+                                      List<Map<String, String>> failedList, List<String> successList) {
+        SoloContest soloContest = soloContestDao.findById(soloContestId);
+
+        Map<String, byte[]> map = new HashMap<>();
+        int code = ZipUtil.extractFiles(zipFile, map);
+
+        if (code != 0) {
+            // zip file extraction error
+            return Constants.ZIP_ERROR;
+        }
+
+        for (Map.Entry<String, byte[]> entry : map.entrySet()) {
+            String fileName = entry.getKey();
+            String[] parts = fileName.split("/");
+            String indent = parts[parts.length-1];
+
+            byte[] bytes = entry.getValue();
+
+            indent = indent.trim();
+            String[] bases = indent.split("\\.");
+
+            String studentIdStr = bases[0];
+            Integer studentId = null;
+            try{
+                studentId = Integer.parseInt(studentIdStr);
+            }catch(NumberFormatException e){
+                this.appendMsgElem(failedList, fileName, Constants.MSG_NAME_NOT_NUMBER);
+                continue;
+            }
+            Student stu = studentDao.findById(studentId);
+
+            //make sure unique
+            if (stu == null) {
+                this.appendMsgElem(failedList, fileName, Constants.MSG_FILE_NAME_NO_MAPPING);
+                continue;
+            }
+
+            SoloCredential tmp = soloCredentialDao.findBySoloContestAndStudent(soloContestId, studentId);
+            if(tmp != null){
+                this.appendMsgElem(failedList, fileName, Constants.MSG_CREDENTIAL_EXISTS);
+                continue;
+            }
+
+            School school = schoolDao.findById(stu.getSchoolId());
+            SoloCredential sc = new SoloCredential();
 
 
+            StringBuilder key = new StringBuilder(soloContest.getTitle());
+            key.append("-");
+            key.append(school.getSchoolName());
+            key.append("-");
+            key.append(stu.getStuName());
+
+            StringBuilder resp = new StringBuilder();   // url base if success else error message
+            code = ossService.uploadBytes(key.toString(), bytes, ossService.BUCKET_PRIVATE, resp);
+
+            if (code != 0) {
+                this.appendMsgElem(failedList, fileName, resp.toString());
+                continue;
+            }
+            sc.setName(key.toString());
+            sc.setSoloContestId(soloContestId);
+            sc.setStudentId(studentId);
+            sc.setUploadTime(Calendar.getInstance().getTime());
+            sc.setBucket(ossService.BUCKET_PRIVATE);
+
+            int c = this.soloCredentialDao.insert(sc);
+
+            successList.add(entry.getKey());
+        }
         return Constants.SUCCESS;
     }
 
+    public Integer getSoloCredentialAsZip(List<Integer> ids,
+                                          ZipOutputStream zipOutputStream) {
+        String base = "Proof of Awards/";
+        ZipEntry dir = new ZipEntry(base);
+        try {
+            zipOutputStream.putNextEntry(dir);
+            zipOutputStream.closeEntry();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for(Integer id: ids){
+            byte[] res = getSoloCredentialFile(id);
+            if(res == null){
+                continue;
+            }
+            SoloCredential sc = soloCredentialDao.findById(id);
+            String name = sc.getName();
+
+            //TODO: currently fixed as pdf format, allow more in the future
+            ZipEntry zipEntry = new ZipEntry(base + name + ".pdf");
+
+            try {
+                zipOutputStream.putNextEntry(zipEntry);
+                zipOutputStream.write(res);
+                zipOutputStream.closeEntry();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            zipOutputStream.flush();
+            zipOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Constants.SUCCESS;
+    }
+
+    public Integer getSoloCredentialUrl(Integer id, StringBuilder resUrl){
+        SoloCredential cc = this.soloCredentialDao.findById(id);
+        if(cc == null){
+            return Constants.CREDENTIAL_NOT_EXISTS;
+        }
+        Bucket bucket = this.bucketDao.findByName(cc.getBucket());
+        if(bucket == null){
+            return Constants.FAIL;
+        }
+        String url = ossService.genPrivateUrl(cc.getName(), bucket.getDomain());
+        resUrl.append(url);
+        return Constants.SUCCESS;
+    }
+
+    public byte[] getSoloCredentialFile(Integer id){
+        StringBuilder sb = new StringBuilder();
+        int code = getSoloCredentialUrl(id, sb);
+        if(code != Constants.SUCCESS){
+            return null;
+        }
+        byte[] res = HTTPUtil.getByteFrom(sb.toString());
+        return res;
+    }
+
+
 }
+
+
+
