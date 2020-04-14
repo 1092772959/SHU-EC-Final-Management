@@ -4,14 +4,8 @@ import com.shu.icpc.Component.MailService;
 import com.shu.icpc.Component.OSSService;
 import com.shu.icpc.dao.ArticleDao;
 import com.shu.icpc.dao.SchoolDao;
-import com.shu.icpc.entity.Article;
-import com.shu.icpc.entity.Contest;
-import com.shu.icpc.entity.School;
-import com.shu.icpc.entity.SoloContest;
-import com.shu.icpc.service.CoachService;
-import com.shu.icpc.service.ContestService;
-import com.shu.icpc.service.SignService;
-import com.shu.icpc.service.SoloContestService;
+import com.shu.icpc.entity.*;
+import com.shu.icpc.service.*;
 import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.PasswordGenerateUtil;
 import com.shu.icpc.utils.TimeUtil;
@@ -36,7 +30,7 @@ import java.util.zip.ZipInputStream;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class IcpcApplicationTests {
+public class IcpcApplicationTests extends CoreService {
 
 //    @Resource
 //    protected BillDao billDao;
@@ -75,7 +69,7 @@ public class IcpcApplicationTests {
 
     @Test
     public void genPassword(){
-        String pswd = PasswordGenerateUtil.getPassword("123456", "11011111111", Constants.hashTime);
+        String pswd = PasswordGenerateUtil.getPassword("123456", "13120716616", Constants.hashTime);
         System.out.println(pswd);
     }
 
@@ -122,6 +116,17 @@ public class IcpcApplicationTests {
         code = articleDao.update(article);
         System.out.println(code);
 
+    }
+
+    @Test
+    public void testSoloCredential(){
+        List<SoloCredential> res = this.soloCredentialDao.findBySoloContestAndSchool(1, 87);
+        for(SoloCredential sc : res){
+            System.out.println(sc);
+        }
+
+        SoloCredential sc = this.soloCredentialDao.findBySoloContestAndStudent(1, 13);
+        System.out.println(sc);
     }
 
     @Test

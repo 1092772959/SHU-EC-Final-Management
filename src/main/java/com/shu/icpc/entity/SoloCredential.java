@@ -65,4 +65,16 @@ public class SoloCredential {
     public void setUploadTime(Date uploadTime) {
         this.uploadTime = uploadTime;
     }
+
+    @Override
+    public String toString() {
+        return "SoloCredential{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", bucket='" + bucket + '\'' +
+                ", soloContestId=" + soloContestId +
+                ", studentId=" + studentId +
+                ", uploadTime=" + uploadTime +
+                '}';
+    }
 }
