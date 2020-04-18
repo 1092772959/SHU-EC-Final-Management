@@ -56,7 +56,7 @@ public class CredentialService extends CoreService {
                                          List<String> successList) {
         Contest contest = contestDao.findById(contestId);
         if(contest == null){
-            return Constants.FAIL;
+            return Constants.CONTEST_NOT_EXISTS;
         }
 
         Map<String, byte[]> map = new HashMap<>();
@@ -233,6 +233,9 @@ public class CredentialService extends CoreService {
     public Integer saveSoloCredential(ZipInputStream zipFile, Integer soloContestId,
                                       List<Map<String, String>> failedList, List<String> successList) {
         SoloContest soloContest = soloContestDao.findById(soloContestId);
+        if(soloContest == null){
+            return Constants.SOLO_CONTEST_NOT_EXISTS;
+        }
 
         Map<String, byte[]> map = new HashMap<>();
         int code = ZipUtil.extractFiles(zipFile, map);
