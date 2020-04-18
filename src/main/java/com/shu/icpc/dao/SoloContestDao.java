@@ -28,6 +28,8 @@ public interface SoloContestDao {
     //sign off
     int signOffContest(Integer studentId, Integer soloContestId);
 
+    Integer findSignedIn(Integer studentId, Integer soloContestId);
+
     //添加一场比赛
     int insert(SoloContest soloContest);
 

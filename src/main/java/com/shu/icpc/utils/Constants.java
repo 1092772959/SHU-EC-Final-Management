@@ -88,9 +88,15 @@ public class Constants {
 
     public static final Integer NUM_LIMIT = 722;
 
-    public static final Integer TIME_ERROR = 723;
+    public static final Integer REGISTER_TIME_ERROR = 723;
 
     public static final Integer SOLO_NO_RECORD = 724;  //no sign in record to delete
+
+    public static final Integer DUPLICATION_SIGN_IN = 725;
+
+    public static final Integer NUM_ERROR = 726;
+
+    public static final Integer TIME_ERROR = 727;
 
     //-----------------team contest related
     public static final Integer SIGN_IN_NO_TEAM = 730;  // no such team

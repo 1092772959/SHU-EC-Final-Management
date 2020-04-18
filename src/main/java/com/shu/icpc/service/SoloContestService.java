@@ -28,7 +28,7 @@ public class SoloContestService extends CoreService{
         }
 
         if(soloContest.getNumMax() <=0 ){
-            return Constants.FAIL;
+            return Constants.NUM_ERROR;
         }
 
         soloContestDao.insert(soloContest);
@@ -85,16 +85,21 @@ public class SoloContestService extends CoreService{
         }
         Date time = new Date();
         if(time.before(sc.getSignStartTime()) || time.after(sc.getSignEndTime())){
-            return Constants.FAIL;
+            return Constants.REGISTER_TIME_ERROR;
+        }
+
+        Integer stuIdCheck = soloContestDao.findSignedIn(stuId, soloContestId);
+        if(stuIdCheck != null){
+            return Constants.DUPLICATION_SIGN_IN;
         }
 
         Integer num = this.soloContestDao.findNumFactByContest(soloContestId);
         if(num >= sc.getNumMax()){
-            return Constants.NUM_LIMIT;
+            return Constants.REGISTER_TIME_ERROR;
         }
 
         this.soloContestDao.signInContest(stuId, soloContestId, isStarred);
-        //TODO send message to student
+        //TODO: send message to student
 
         return Constants.SUCCESS;
     }
@@ -111,7 +116,7 @@ public class SoloContestService extends CoreService{
 
         Date time = new Date();
         if(time.before(sc.getSignStartTime()) || time.after(sc.getSignEndTime())){
-            return Constants.FAIL;
+            return Constants.REGISTER_TIME_ERROR;
         }
 
         int code = this.soloContestDao.signOffContest(stuId, soloContestId);

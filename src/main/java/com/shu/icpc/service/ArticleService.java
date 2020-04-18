@@ -15,7 +15,14 @@ import java.util.List;
 public class ArticleService extends CoreService {
 
     public List<Article> getAll(){
-        return this.articleDao.findAll();
+        Object user = loginService.getUserFromSession();
+        List<Article> res = null;
+        if(user instanceof Admin){
+            res = articleDao.findAll();
+        }else {
+            res = articleDao.findByStatus(Constants.CHECK_STATUS_PASS);
+        }
+        return res;
     }
 
     public List<Article> getTitleLike(String titleLike){

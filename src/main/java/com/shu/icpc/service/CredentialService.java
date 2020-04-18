@@ -28,7 +28,7 @@ public class CredentialService extends CoreService {
 
     private void appendMsgElem(List<Map<String, String>> list, String fileName, String msg){
         Map<String, String > elem = new HashMap<>();
-        elem.put("fileName:", fileName);
+        elem.put("fileName", fileName);
         elem.put("error", msg);
         list.add(elem);
     }
@@ -366,8 +366,6 @@ public class CredentialService extends CoreService {
         byte[] res = HTTPUtil.getByteFrom(sb.toString());
         return res;
     }
-
-
 }
 
 

@@ -46,6 +46,12 @@
         where solo_contest_id = #{soloContestId} and student_id = #{studentId}
     </delete>
 
+    <select id="findSignedIn" resultType="Integer">
+        select student_id
+        from solo_contest_record
+        where solo_contest_id = #{soloContestId} and student_id = #{studentId}
+    </select>
+
     <select id="findNumFactByContest" resultType="Integer">
         select COUNT(Z.student_id)
         from solo_contest_record as Z
