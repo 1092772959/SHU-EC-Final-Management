@@ -2,7 +2,7 @@ package com.shu.icpc.controller;
 
 import com.shu.icpc.Component.OSSService;
 import com.shu.icpc.service.*;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import javax.annotation.Resource;
 
@@ -36,6 +36,9 @@ public class CoreController {
 
     @Resource
     protected CredentialService credentialService;
+
+    @Resource
+    RabbitTemplate rabbitTemplate;
 
     @Resource
     protected OSSService ossService;

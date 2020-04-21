@@ -5,6 +5,7 @@ import com.shu.icpc.Component.OSSService;
 import com.shu.icpc.dao.*;
 import com.shu.icpc.entity.SoloCredential;
 import com.shu.icpc.entity.Student;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -60,6 +61,9 @@ public class CoreService {
 
     @Resource
     protected OSSService ossService;
+
+    @Resource
+    protected RabbitTemplate rabbitTemplate;
 
     @Resource
     protected RedisTemplate redisTemplate;

@@ -1,16 +1,23 @@
 package com.shu.icpc.service;
 
 import com.shu.icpc.Component.MailService;
+import com.shu.icpc.Component.mq.Mail;
+import com.shu.icpc.Component.mq.RabbitMQConfig;
 import com.shu.icpc.entity.Coach;
 import com.shu.icpc.entity.School;
 import com.shu.icpc.entity.Student;
 import com.shu.icpc.utils.Constants;
+import com.shu.icpc.utils.FileUtil;
 import com.shu.icpc.utils.PasswordGenerateUtil;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +27,9 @@ public class SignService extends CoreService{
 
     @Resource
     private MailService mailService;
+
+    @Resource
+    private RabbitMQConfig mqConfig;
 
     public Integer schoolSignUp(School school, Coach chief){
         School t = schoolDao.findByName(school.getSchoolName());
@@ -148,11 +158,33 @@ public class SignService extends CoreService{
      * @param email
      * @param tag
      */
-    private void getAndSendCheckCode(String email, int tag){
+    private void getAndSendCheckCode(String email, int tag) {
         String code = generateCode(), title = "SHU-ECFINAL 找回密码", baseContent = "验证码：";
+        StringBuilder content = new StringBuilder(baseContent);
+        content.append(code);
+        content.append("\n有效时间为10分钟。");
+        Mail m = new Mail();
+        m.setEmail(email);
+        m.setTitle(title);
+        m.setContent(content.toString());
         //缓存内过期时间为10分钟
-        redisTemplate.opsForValue().set(email, code+tag, 10, TimeUnit.MINUTES);
-        mailService.sendSimpleMail(email,title, baseContent+code+"\n有效时间为10分钟。");
+        //redisTemplate.opsForValue().set(email, code+tag, 10, TimeUnit.MINUTES);
+
+        //send to mail service; using rabbit mq to decouple
+
+        //serialize
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(baos);
+            oos.writeObject(m);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        FileUtil.close(oos, baos);
+        //send
+        rabbitTemplate.convertAndSend(mqConfig.getExchange(), mqConfig.getRouteKey(), baos.toByteArray());
+        //mailService.sendSimpleMail(email,title, baseContent+code+"\n有效时间为10分钟。");
     }
 
     //确认并找回

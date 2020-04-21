@@ -1,12 +1,8 @@
 package com.shu.icpc.utils;
 
-import java.util.List;
-
 /**
  * @program: result util
  * @description: 返回数据类型
- * @author: ydc
- * @create: 2019-04-25 13:59
  **/
 public class ResultTool {
 

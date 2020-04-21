@@ -1,18 +1,13 @@
 package com.shu.icpc.service;
 
-import com.shu.icpc.Component.CredentialNameGetter;
 import com.shu.icpc.entity.*;
 import com.shu.icpc.utils.Constants;
-import com.shu.icpc.utils.FileUtil;
 import com.shu.icpc.utils.HTTPUtil;
 import com.shu.icpc.utils.ZipUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;

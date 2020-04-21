@@ -1,6 +1,5 @@
 package com.shu.icpc.controller;
 
-import com.shu.icpc.dao.ContestDao;
 import com.shu.icpc.entity.*;
 import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.Result;
@@ -9,14 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.io.IOException;
 import java.util.List;
-import java.util.zip.ZipOutputStream;
 
 @RequestMapping("/api/user")
 @Controller
@@ -145,6 +138,16 @@ public class PublicController extends CoreController{
     public Result getArticlesLike(@NotBlank String titleLike){
         List<Article> res = this.articleService.getTitleLike(titleLike);
         return ResultTool.successGet(res);
+    }
+
+    /**
+     * test mq
+     */
+    @ResponseBody
+    @PostMapping("/echo")
+    public Result testMQ(String msg) {
+        rabbitTemplate.convertAndSend("shu_icpc", "mail", msg);
+        return ResultTool.success();
     }
 
     /*

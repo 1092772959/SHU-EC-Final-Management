@@ -131,7 +131,7 @@
 
     <select id="findDetailedInfo" resultType="java.util.LinkedHashMap">
         select
-        S.school_name as schoolName, S.abbr_name as abbrName, T.team_name as teamName, T.foreign_name as teamForeignName,
+        S.school_name as schoolName, S.abbr_name as abbrName, T.id as teamId,  T.team_name as teamName, T.foreign_name as teamForeignName,
         C.coach_name as coachName, CONCAT(C.family_name,' ', C.first_name) as coachForeignName, C.phone, C.email, CR.coach_onsite as coachOnSite ,C.size as coachSize,
         SA.stu_name as stuAName, CONCAT(SA.family_name,' ', SA.first_name) as stuAForeignName, SA.sex as stuASex, SA.phone as stuAPhone, SA.size as stuASize,
         SB.stu_name as stuBName, CONCAT(SB.family_name,' ', SB.first_name) as stuBForeignName, SB.sex as stuBSex, SB.phone as stuBPhone, SB.size as stuBSize,
