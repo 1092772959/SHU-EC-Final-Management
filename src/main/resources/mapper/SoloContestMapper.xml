@@ -61,7 +61,7 @@
     <select id="findDetailsByContestAndSchool" resultType="java.util.LinkedHashMap">
         select
         S.school_name as schoolName, S.abbr_name as abbrName,
-        ST.stu_id as stuId, ST.stu_name as stuName, CONCAT(ST.family_name, ' ', ST.first_name) as stuForeignName,
+        ST.id as id, ST.stu_id as stuId, ST.stu_name as stuName, CONCAT(ST.family_name, ' ', ST.first_name) as stuForeignName,
         ST.phone, ST.email, ST.sex as sex, ST.size as size
         from school as S, student as ST, solo_contest as C, solo_contest_record as R
         where S.id = ST.school_id and ST.id = R.student_id and C.id = R.solo_contest_id
