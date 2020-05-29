@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shu.icpc.dao.TeamDao">
 
-    <select id = "findBySchoolId" resultType="Team">
+    <select id="findBySchoolId" resultType="Team">
         select * from team where school_id = #{schoolId}
     </select>
 
-    <select id = "findCheckHasContest" resultType="java.util.Map">
+    <select id="findCheckHasContest" resultType="java.util.Map">
         select * from contest_record
         where team_id = #{teamId}
     </select>
@@ -22,37 +22,37 @@
 
     <select id="findByContestId" resultType="java.util.Map">
         select X.id, X.team_name as teamName, X.foreign_name as foreignName, X.school_id as schoolId,
-          X.coach_id as coachId, X.coach_name as coachName, X.stu_a_id as stuAId, X.stu_a_name as stuAName,
-          X.stu_b_id as stuBId, X.stu_b_name as stuBName, X.stu_c_id as stuCId, X.stu_c_name as stuCName,
-          Y.is_starred as 打星
+        X.coach_id as coachId, X.coach_name as coachName, X.stu_a_id as stuAId, X.stu_a_name as stuAName,
+        X.stu_b_id as stuBId, X.stu_b_name as stuBName, X.stu_c_id as stuCId, X.stu_c_name as stuCName,
+        Y.is_starred as 打星
         from team as X, contest_record as Y
         where Y.team_id = X.id and contest_id = #{contestId}
     </select>
 
     <select id="findBySchoolAndContest" resultType="java.util.Map">
-         select X.id, X.team_name as teamName, X.foreign_name as foreignName, X.school_id as schoolId,
-          X.coach_id as coachId, X.coach_name as coachName, X.stu_a_id as stuAId, X.stu_a_name as stuAName,
-          X.stu_b_id as stuBId, X.stu_b_name as stuBName, X.stu_c_id as stuCId, X.stu_c_name as stuCName,
-          Y.is_starred as 打星
+        select X.id, X.team_name as teamName, X.foreign_name as foreignName, X.school_id as schoolId,
+        X.coach_id as coachId, X.coach_name as coachName, X.stu_a_id as stuAId, X.stu_a_name as stuAName,
+        X.stu_b_id as stuBId, X.stu_b_name as stuBName, X.stu_c_id as stuCId, X.stu_c_name as stuCName,
+        Y.is_starred as 打星
         from team as X, contest_record as Y
         where Y.team_id = X.id and Y.contest_id = #{contestId} and X.school_id = #{schoolId}
     </select>
 
     <!--<update id="update" parameterType="Team">-->
-        <!--update team-->
-        <!--set team_name = #{teamName}, foreign_name = #{foreignName},-->
-            <!--coach_id = #{coachId}, coach_name = #{coachName},-->
-            <!--stu_a_id = #{stuAId}, stu_a_name = #{stuAName},-->
-            <!--stu_b_id = #{stuBId}, stu_b_name = #{stuBName},-->
-            <!--stu_c_id = #{stuCId}, stu_c_name = #{stuCName}-->
-        <!--where id = #{id}-->
+    <!--update team-->
+    <!--set team_name = #{teamName}, foreign_name = #{foreignName},-->
+    <!--coach_id = #{coachId}, coach_name = #{coachName},-->
+    <!--stu_a_id = #{stuAId}, stu_a_name = #{stuAName},-->
+    <!--stu_b_id = #{stuBId}, stu_b_name = #{stuBName},-->
+    <!--stu_c_id = #{stuCId}, stu_c_name = #{stuCName}-->
+    <!--where id = #{id}-->
     <!--</update>-->
 
     <insert id="insert" parameterType="Team">
         insert into team(team_name, foreign_name, school_id, school_name, coach_id, coach_name,
-              stu_a_id, stu_a_name, stu_b_id, stu_b_name, stu_c_id, stu_c_name)
+        stu_a_id, stu_a_name, stu_b_id, stu_b_name, stu_c_id, stu_c_name)
         values (#{teamName}, #{foreignName}, #{schoolId}, #{schoolName}, #{coachId}, #{coachName},
-                #{stuAId}, #{stuAName}, #{stuBId}, #{stuBName}, #{stuCId}, #{stuCName})
+        #{stuAId}, #{stuAName}, #{stuBId}, #{stuBName}, #{stuCId}, #{stuCName})
     </insert>
 
     <delete id="delete">

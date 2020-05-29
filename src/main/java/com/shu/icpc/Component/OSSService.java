@@ -1,4 +1,5 @@
 package com.shu.icpc.Component;
+
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
@@ -36,72 +37,71 @@ public class OSSService {
     @Resource
     private UploadManager uploadManager;
 
-	@Bean
-	private UploadManager getUploadManager(){
-		Configuration cfg = new Configuration(Region.region0());
-		return new UploadManager(cfg);
-	}
+    @Bean
+    private UploadManager getUploadManager() {
+        Configuration cfg = new Configuration(Region.region0());
+        return new UploadManager(cfg);
+    }
 
-    public String getToken (String bucket) {
-		if(auth == null){
-			auth = Auth.create(this.ACCESS_KEY, this.SECRET_KEY);
-		}
+    public String getToken(String bucket) {
+        if (auth == null) {
+            auth = Auth.create(this.ACCESS_KEY, this.SECRET_KEY);
+        }
         this.token = auth.uploadToken(bucket);
         return token;
     }
 
-    public String genPublicUrl(){
-		String res = null;
-		return res;
-	}
+    public String genPublicUrl() {
+        String res = null;
+        return res;
+    }
 
-	public String genPrivateUrl(String key, String urlBase){
-		String res = null;
+    public String genPrivateUrl(String key, String urlBase) {
+        String res = null;
 
-		String encodedFileName = null;
-		try {
-			encodedFileName = URLEncoder.encode(key, "utf-8").replace("+", "%20");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		String publicUrl = String.format("%s/%s", urlBase, encodedFileName);
+        String encodedFileName = null;
+        try {
+            encodedFileName = URLEncoder.encode(key, "utf-8").replace("+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String publicUrl = String.format("%s/%s", urlBase, encodedFileName);
 
-		//default expired time is 3600s
-		Auth auth = Auth.create(this.ACCESS_KEY, this.SECRET_KEY);
-		String finalUrl = auth.privateDownloadUrl(publicUrl);
-		System.out.println(finalUrl);
-		return finalUrl;
-	}
+        //default expired time is 3600s
+        Auth auth = Auth.create(this.ACCESS_KEY, this.SECRET_KEY);
+        String finalUrl = auth.privateDownloadUrl(publicUrl);
+        System.out.println(finalUrl);
+        return finalUrl;
+    }
 
-	/**
-	 *
-	 * @param key
-	 * @param bytes
-	 * @param bucket
-	 * @param msg (contains error msg if error happens)
-	 * @return
-	 */
-    public Integer uploadBytes(String key, byte[] bytes, String bucket, StringBuilder msg){
-		if(token == null){
-			getToken(bucket);
-		}
+    /**
+     * @param key
+     * @param bytes
+     * @param bucket
+     * @param msg    (contains error msg if error happens)
+     * @return
+     */
+    public Integer uploadBytes(String key, byte[] bytes, String bucket, StringBuilder msg) {
+        if (token == null) {
+            getToken(bucket);
+        }
 
-		for(int i=0;i < Constants.RETRY_TIME;++i){
-			try{
-				Response resp = uploadManager.put(bytes, key, token);
+        for (int i = 0; i < Constants.RETRY_TIME; ++i) {
+            try {
+                Response resp = uploadManager.put(bytes, key, token);
 
-			}catch (QiniuException ex){
-				//refresh if token expired
-				if(ex.getMessage().contains("expire")){
-					token = getToken(bucket);
-					continue;
-				}
-				msg.append(ex.getMessage());
-				ex.printStackTrace();
-				return -1;
-			}
-		}
-		return 0;
-	}
+            } catch (QiniuException ex) {
+                //refresh if token expired
+                if (ex.getMessage().contains("expire")) {
+                    token = getToken(bucket);
+                    continue;
+                }
+                msg.append(ex.getMessage());
+                ex.printStackTrace();
+                return -1;
+            }
+        }
+        return 0;
+    }
 
 }

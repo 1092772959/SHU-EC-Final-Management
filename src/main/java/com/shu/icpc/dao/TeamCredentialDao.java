@@ -7,9 +7,11 @@ import java.util.List;
 public interface TeamCredentialDao {
     TeamCredential findById(Integer id);
 
-    List<TeamCredential>  findByContest(Integer contestId);
+    List<TeamCredential> findByContest(Integer contestId);
 
     List<TeamCredential> findByContestAndSchool(Integer contestId, Integer schoolId);
+
+    List<TeamCredential> findByContestAndStudent(Integer contestId, Integer studentId);
 
     TeamCredential findByContestAndTeam(Integer contestId, Integer teamId);
 

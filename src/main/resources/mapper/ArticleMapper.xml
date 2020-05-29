@@ -11,7 +11,7 @@
         from article
         where status = #{status}
     </select>
-    
+
     <select id="findById" resultType="Article">
         select *
         from article

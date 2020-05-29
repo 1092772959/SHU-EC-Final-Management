@@ -6,7 +6,7 @@ package com.shu.icpc.utils;
  **/
 public class ResultTool {
 
-    public static Result<Object> successGet(Object object){
+    public static Result<Object> successGet(Object object) {
         Result<Object> result = new Result<>();
         result.setStatus(Constants.SUCCESS_GET);
         String message = Constants.message.get(Constants.SUCCESS_GET);
@@ -15,7 +15,7 @@ public class ResultTool {
         return result;
     }
 
-    public static Result get(int code, Object data){
+    public static Result get(int code, Object data) {
         Result result = new Result();
         result.setStatus(code);
         String message = Constants.message.get(code);
@@ -24,7 +24,7 @@ public class ResultTool {
         return result;
     }
 
-    public static Result success(){
+    public static Result success() {
         Result result = new Result();
         result.setStatus(Constants.SUCCESS);
         String message = Constants.message.get(Constants.SUCCESS);
@@ -33,7 +33,7 @@ public class ResultTool {
         return result;
     }
 
-    public static Result error(){
+    public static Result error() {
         Result result = new Result();
         result.setStatus(Constants.FAIL);
         String message = Constants.message.get(Constants.FAIL);
@@ -42,7 +42,7 @@ public class ResultTool {
         return result;
     }
 
-    public static Result resp(int code){
+    public static Result resp(int code) {
         Result result = new Result();
         result.setStatus(code);
         String message = Constants.message.get(code);
@@ -50,7 +50,7 @@ public class ResultTool {
         return result;
     }
 
-    public static Result resp(int code, Object data){
+    public static Result resp(int code, Object data) {
         Result result = new Result();
         result.setStatus(code);
         String message = Constants.message.get(code);

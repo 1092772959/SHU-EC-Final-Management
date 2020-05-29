@@ -4,17 +4,13 @@ import com.shu.icpc.entity.*;
 import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.Result;
 import com.shu.icpc.utils.ResultTool;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -23,9 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 @RequiresRoles("admin")
 @RequestMapping("/api/admin")
@@ -235,9 +229,9 @@ public class AdminController extends CoreController {
     @ResponseBody
     @PostMapping("/article/update")
     public Result updateArticle_v2(@NotNull Integer articleId, @NotBlank String content,
-                                @NotBlank String coverUrl, @NotBlank String intro) {
+                                   @NotBlank String coverUrl, @NotBlank String intro) {
         Article article = null;
-        Admin admin = (Admin)loginService.getUserFromSession();
+        Admin admin = (Admin) loginService.getUserFromSession();
         Integer code = this.articleService.set(articleId, content, coverUrl, intro, admin.getId(), article);
         return ResultTool.resp(code, article);
     }
@@ -253,7 +247,7 @@ public class AdminController extends CoreController {
 
     @ResponseBody
     @PostMapping("/article/delete")
-    public Result deleteArticle_v2(@NotNull Integer articleId){
+    public Result deleteArticle_v2(@NotNull Integer articleId) {
         Admin admin = (Admin) loginService.getUserFromSession();
         int code = this.articleService.delete(articleId, admin.getId());
         return ResultTool.resp(code);
@@ -268,7 +262,7 @@ public class AdminController extends CoreController {
     public Result updateArticle(@NotNull Integer articleId, @NotBlank String content,
                                 @NotBlank String coverUrl, @NotBlank String intro) {
         Article article = null;
-        Admin admin = (Admin)loginService.getUserFromSession();
+        Admin admin = (Admin) loginService.getUserFromSession();
         Integer code = this.articleService.set(articleId, content, coverUrl, intro, admin.getId(), article);
         return ResultTool.resp(code, article);
     }
@@ -282,7 +276,7 @@ public class AdminController extends CoreController {
 
     @ResponseBody
     @DeleteMapping("/article")
-    public Result deleteArticle(@NotNull Integer articleId){
+    public Result deleteArticle(@NotNull Integer articleId) {
         Admin admin = (Admin) loginService.getUserFromSession();
         int code = this.articleService.delete(articleId, admin.getId());
         return ResultTool.resp(code);
@@ -294,7 +288,7 @@ public class AdminController extends CoreController {
 
     @ResponseBody
     @PostMapping("/contest/credentials")
-    public Result addTeamCredential(@NotNull MultipartFile file, @NotNull Integer contestId){
+    public Result addTeamCredential(@NotNull MultipartFile file, @NotNull Integer contestId) {
         ZipInputStream zipFile = null;
         try {
             zipFile = new ZipInputStream(file.getInputStream());
@@ -317,7 +311,7 @@ public class AdminController extends CoreController {
      */
     @ResponseBody
     @PostMapping("/solo/credentials")
-    public Result addSoloCredentials(@NotNull MultipartFile file, @NotNull Integer soloContestId){
+    public Result addSoloCredentials(@NotNull MultipartFile file, @NotNull Integer soloContestId) {
         ZipInputStream zipFile = null;
         try {
             zipFile = new ZipInputStream(file.getInputStream());

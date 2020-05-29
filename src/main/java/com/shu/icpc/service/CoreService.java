@@ -1,13 +1,9 @@
 package com.shu.icpc.service;
 
-import com.shu.icpc.Component.MailService;
 import com.shu.icpc.Component.OSSService;
 import com.shu.icpc.dao.*;
-import com.shu.icpc.entity.SoloCredential;
-import com.shu.icpc.entity.Student;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 

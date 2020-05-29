@@ -9,25 +9,25 @@
     <!--    </resultMap>-->
     <select id="findAll" resultType="Student">
         select id, stu_id, stu_name, family_name, first_name, school_id, college, major, enroll_year,
-            phone, email, sex, size, check_status
+        phone, email, sex, size, check_status
         from student
     </select>
 
-    <select id="findById" parameterType="int" resultType= "Student">
+    <select id="findById" parameterType="int" resultType="Student">
         select *
         from student
         where id = #{id}
     </select>
 
-    <select id="findByPhone" parameterType="String" resultType= "Student">
+    <select id="findByPhone" parameterType="String" resultType="Student">
         select *
         from student
         where phone = #{phone}
     </select>
 
-    <select id="findBySchoolId" parameterType="int" resultType= "Student">
+    <select id="findBySchoolId" parameterType="int" resultType="Student">
         select id, stu_id, stu_name, family_name, first_name, school_id, college, major, enroll_year,
-            phone, email, sex, size, check_status
+        phone, email, sex, size, check_status
         from student
         where school_id = #{schoolId}
     </select>
@@ -67,7 +67,7 @@
     </update>
 
 
-    <update id="updatePswd" >
+    <update id="updatePswd">
         update student
         set pswd = #{pswd}
         where id = #{id}
@@ -81,9 +81,9 @@
 
     <insert id="insert" parameterType="Student">
         insert into student(stu_id, stu_name, family_name, first_name, school_id, college, major, enroll_year,
-            phone, email, sex, size,  pswd, check_status)
+        phone, email, sex, size, pswd, check_status)
         values (#{stuId}, #{stuName}, #{familyName}, #{firstName}, #{schoolId}, #{college}, #{major}, #{enrollYear},
-           #{phone}, #{email}, #{sex}, #{size}, #{pswd}, #{checkStatus})
+        #{phone}, #{email}, #{sex}, #{size}, #{pswd}, #{checkStatus})
     </insert>
 
     <delete id="delete">
@@ -94,7 +94,7 @@
     <select id="find" resultType="java.util.Map">
         select x.id, x.stu_id, x.stu_name, x.family_name, x.first_name, x.school_id, y.school_name,
         x.college, x.major, x.enroll_year, x.phone, x.email, x.sex, x.size
-         from student as x, school as y
+        from student as x, school as y
         where x.school_id = y.id
     </select>
 

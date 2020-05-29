@@ -6,7 +6,8 @@ import java.util.Date;
 
 public class Coach {
 
-    public Coach(){}
+    public Coach() {
+    }
 
     private Integer id;
 

@@ -23,18 +23,18 @@ import java.util.zip.ZipOutputStream;
 @RequestMapping("/api")
 @Controller
 @Validated
-public class CommonController extends CoreController{
+public class CommonController extends CoreController {
 
     @ResponseBody
     @GetMapping("/solo")
-    public Result getAllSoloContests(){
+    public Result getAllSoloContests() {
         List<SoloContest> res = this.soloContestService.getAll();
         return ResultTool.successGet(res);
     }
 
     @ResponseBody
     @GetMapping("/oss/token")
-    public Result refreshToken(@NotBlank String bucket){
+    public Result refreshToken(@NotBlank String bucket) {
         String token = ossService.getToken(bucket);
         return ResultTool.successGet(ossService.getToken(bucket));
     }
@@ -44,14 +44,17 @@ public class CommonController extends CoreController{
      */
     @ResponseBody
     @GetMapping("/contest/credential/info")
-    public Result getTeamCredentialInfo(@NotNull Integer contestId){
+    public Result getTeamCredentialInfo(@NotNull Integer contestId) {
         Object user = loginService.getUserFromSession();
         List<TeamCredential> res = null;
-        if(user instanceof Admin){
+        if (user instanceof Admin) {
             res = credentialService.getTeamCredentialInfo(contestId);
-        }else if(user instanceof Coach){
-            Coach ch = (Coach)user;
+        } else if (user instanceof Coach) {
+            Coach ch = (Coach) user;
             res = credentialService.getTeamCredentialInfo(contestId, ch.getSchoolId());
+        } else if (user instanceof Student) {
+            Student stu = (Student) user;
+            res = credentialService.getTeamCredentialInfoStu(contestId, stu.getId());
         }
         return ResultTool.successGet(res);
     }
@@ -59,7 +62,7 @@ public class CommonController extends CoreController{
     @ResponseBody
     @GetMapping(value = "/contest/credentials")
     public Result getTeamCredentials(@NotEmpty @RequestParam("ids") List<Integer> credentialIds,
-                                     HttpServletResponse response){
+                                     HttpServletResponse response) {
         ZipOutputStream zos = null;
         try {
             zos = new ZipOutputStream(response.getOutputStream());
@@ -75,7 +78,7 @@ public class CommonController extends CoreController{
 
     @ResponseBody
     @GetMapping("/contest/credential")
-    public Result getTeamCredentialUrl(@NotNull Integer id){
+    public Result getTeamCredentialUrl(@NotNull Integer id) {
         StringBuilder url = new StringBuilder();
         int code = this.credentialService.getTeamCredentialUrl(id, url);
         return ResultTool.resp(code, url.toString());
@@ -87,7 +90,7 @@ public class CommonController extends CoreController{
     @ResponseBody
     @GetMapping("/solo/credentials")
     public Result getSoloCredentials(@NotEmpty @RequestParam("ids") List<Integer> credentialIds,
-                                     HttpServletResponse response){
+                                     HttpServletResponse response) {
         ZipOutputStream zos = null;
         try {
             zos = new ZipOutputStream(response.getOutputStream());
@@ -103,7 +106,7 @@ public class CommonController extends CoreController{
 
     @ResponseBody
     @GetMapping("/solo/credential")
-    public Result getSoloCredentialUrl(@NotNull Integer id){
+    public Result getSoloCredentialUrl(@NotNull Integer id) {
         StringBuilder url = new StringBuilder();
         int code = this.credentialService.getSoloCredentialUrl(id, url);
         return ResultTool.resp(code, url.toString());
@@ -111,14 +114,17 @@ public class CommonController extends CoreController{
 
     @ResponseBody
     @GetMapping("/solo/credential/info")
-    public Result getSoloCredentialInfo(@NotNull Integer soloContestId){
+    public Result getSoloCredentialInfo(@NotNull Integer soloContestId) {
         Object user = loginService.getUserFromSession();
         List<SoloCredential> res = null;
-        if(user instanceof Admin){
+        if (user instanceof Admin) {
             res = credentialService.getSoloCredentialInfo(soloContestId);
-        }else if(user instanceof Coach){
-            Coach ch = (Coach)user;
+        } else if (user instanceof Coach) {
+            Coach ch = (Coach) user;
             res = credentialService.getSoloCredentialInfo(soloContestId, ch.getSchoolId());
+        } else if (user instanceof Student) {
+            Student stu = (Student) user;
+            res = credentialService.getSoloCredentialInfoStu(soloContestId, stu.getId());
         }
         return ResultTool.successGet(res);
     }

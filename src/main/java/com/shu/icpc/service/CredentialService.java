@@ -21,36 +21,48 @@ import java.util.zip.ZipOutputStream;
 @Transactional
 public class CredentialService extends CoreService {
 
-    private void appendMsgElem(List<Map<String, String>> list, String fileName, String msg){
-        Map<String, String > elem = new HashMap<>();
+    private void appendMsgElem(List<Map<String, String>> list, String fileName, String msg) {
+        Map<String, String> elem = new HashMap<>();
         elem.put("fileName", fileName);
         elem.put("error", msg);
         list.add(elem);
     }
 
-    public List<TeamCredential> getTeamCredentialInfo(Integer contestId){
+    public List<TeamCredential> getTeamCredentialInfo(Integer contestId) {
         List<TeamCredential> res = teamCredentialDao.findByContest(contestId);
         return res;
     }
 
-    public List<TeamCredential> getTeamCredentialInfo(Integer contestId, Integer schoolId){
+    public List<TeamCredential> getTeamCredentialInfo(Integer contestId, Integer schoolId) {
         List<TeamCredential> res = teamCredentialDao.findByContestAndSchool(contestId, schoolId);
         return res;
     }
 
-    public List<SoloCredential> getSoloCredentialInfo(Integer soloId){
+    public List<TeamCredential> getTeamCredentialInfoStu(Integer contestId, Integer studentId) {
+        List<TeamCredential> res = teamCredentialDao.findByContestAndStudent(contestId, studentId);
+        return res;
+    }
+
+    public List<SoloCredential> getSoloCredentialInfo(Integer soloId) {
         return soloCredentialDao.findBySoloContest(soloId);
     }
 
-    public List<SoloCredential> getSoloCredentialInfo(Integer soloId, Integer schoolId){
+    public List<SoloCredential> getSoloCredentialInfo(Integer soloId, Integer schoolId) {
         return soloCredentialDao.findBySoloContestAndSchool(soloId, schoolId);
+    }
+
+    public List<SoloCredential> getSoloCredentialInfoStu(Integer soloId, Integer studentId) {
+        SoloCredential sc = soloCredentialDao.findBySoloContestAndStudent(soloId, studentId);
+        List<SoloCredential> res = new ArrayList<>();
+        res.add(sc);
+        return res;
     }
 
     public Integer saveContestCredential(ZipInputStream zipFile, Integer contestId,
                                          List<Map<String, String>> failedList,
                                          List<String> successList) {
         Contest contest = contestDao.findById(contestId);
-        if(contest == null){
+        if (contest == null) {
             return Constants.CONTEST_NOT_EXISTS;
         }
 
@@ -65,7 +77,7 @@ public class CredentialService extends CoreService {
         for (Map.Entry<String, byte[]> entry : map.entrySet()) {
             String fileName = entry.getKey();
             String[] parts = fileName.split("/");
-            String indent = parts[parts.length-1];
+            String indent = parts[parts.length - 1];
 
             byte[] bytes = entry.getValue();
 
@@ -74,9 +86,9 @@ public class CredentialService extends CoreService {
 
             String teamIdStr = bases[0];
             Integer teamId = null;
-            try{
+            try {
                 teamId = Integer.parseInt(teamIdStr);
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 this.appendMsgElem(failedList, fileName, Constants.MSG_NAME_NOT_NUMBER);
                 continue;
             }
@@ -90,7 +102,7 @@ public class CredentialService extends CoreService {
             }
 
             TeamCredential tmp = teamCredentialDao.findByContestAndTeam(contestId, teamId);
-            if(tmp != null){
+            if (tmp != null) {
                 this.appendMsgElem(failedList, fileName, Constants.MSG_NAME_NOT_NUMBER);
                 continue;
             }
@@ -120,9 +132,9 @@ public class CredentialService extends CoreService {
             tc.setBucket(ossService.BUCKET_PRIVATE);
 
             //save to mysql
-            try{
+            try {
                 this.teamCredentialDao.insert(tc);
-            }catch(Exception e){
+            } catch (Exception e) {
                 //TODO: add exception resp
             }
             successList.add(entry.getKey());
@@ -130,13 +142,13 @@ public class CredentialService extends CoreService {
         return Constants.SUCCESS;
     }
 
-    public Integer getTeamCredentialUrl(Integer id, StringBuilder resUrl){
+    public Integer getTeamCredentialUrl(Integer id, StringBuilder resUrl) {
         TeamCredential tc = this.teamCredentialDao.findById(id);
-        if(tc == null){
+        if (tc == null) {
             return Constants.CREDENTIAL_NOT_EXISTS;
         }
         Bucket bucket = this.bucketDao.findByName(tc.getBucket());
-        if(bucket == null){
+        if (bucket == null) {
             return Constants.FAIL;
         }
         String url = ossService.genPrivateUrl(tc.getName(), bucket.getDomain());
@@ -144,12 +156,12 @@ public class CredentialService extends CoreService {
         return Constants.SUCCESS;
     }
 
-    public byte[] getTeamCredentialFile(Integer id){
+    public byte[] getTeamCredentialFile(Integer id) {
         StringBuilder sb = new StringBuilder();
         System.out.println("id: " + id);
         int code = getTeamCredentialUrl(id, sb);
 
-        if(code != Constants.SUCCESS){
+        if (code != Constants.SUCCESS) {
             return null;
         }
         byte[] res = HTTPUtil.getByteFrom(sb.toString());
@@ -176,9 +188,9 @@ public class CredentialService extends CoreService {
             e.printStackTrace();
         }
 
-        for(Integer id: ids){
+        for (Integer id : ids) {
             byte[] res = getTeamCredentialFile(id);
-            if(res == null){
+            if (res == null) {
                 //TODO: add error resp msg
                 continue;
             }
@@ -217,18 +229,13 @@ public class CredentialService extends CoreService {
     }
 
 
-
-
-
-
-
     /**
      * soloCrendtial Related
      */
     public Integer saveSoloCredential(ZipInputStream zipFile, Integer soloContestId,
                                       List<Map<String, String>> failedList, List<String> successList) {
         SoloContest soloContest = soloContestDao.findById(soloContestId);
-        if(soloContest == null){
+        if (soloContest == null) {
             return Constants.SOLO_CONTEST_NOT_EXISTS;
         }
 
@@ -243,7 +250,7 @@ public class CredentialService extends CoreService {
         for (Map.Entry<String, byte[]> entry : map.entrySet()) {
             String fileName = entry.getKey();
             String[] parts = fileName.split("/");
-            String indent = parts[parts.length-1];
+            String indent = parts[parts.length - 1];
 
             byte[] bytes = entry.getValue();
 
@@ -252,9 +259,9 @@ public class CredentialService extends CoreService {
 
             String studentIdStr = bases[0];
             Integer studentId = null;
-            try{
+            try {
                 studentId = Integer.parseInt(studentIdStr);
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 this.appendMsgElem(failedList, fileName, Constants.MSG_NAME_NOT_NUMBER);
                 continue;
             }
@@ -267,7 +274,7 @@ public class CredentialService extends CoreService {
             }
 
             SoloCredential tmp = soloCredentialDao.findBySoloContestAndStudent(soloContestId, studentId);
-            if(tmp != null){
+            if (tmp != null) {
                 this.appendMsgElem(failedList, fileName, Constants.MSG_CREDENTIAL_EXISTS);
                 continue;
             }
@@ -313,9 +320,9 @@ public class CredentialService extends CoreService {
             e.printStackTrace();
         }
 
-        for(Integer id: ids){
+        for (Integer id : ids) {
             byte[] res = getSoloCredentialFile(id);
-            if(res == null){
+            if (res == null) {
                 continue;
             }
             SoloCredential sc = soloCredentialDao.findById(id);
@@ -341,13 +348,13 @@ public class CredentialService extends CoreService {
         return Constants.SUCCESS;
     }
 
-    public Integer getSoloCredentialUrl(Integer id, StringBuilder resUrl){
+    public Integer getSoloCredentialUrl(Integer id, StringBuilder resUrl) {
         SoloCredential cc = this.soloCredentialDao.findById(id);
-        if(cc == null){
+        if (cc == null) {
             return Constants.CREDENTIAL_NOT_EXISTS;
         }
         Bucket bucket = this.bucketDao.findByName(cc.getBucket());
-        if(bucket == null){
+        if (bucket == null) {
             return Constants.FAIL;
         }
         String url = ossService.genPrivateUrl(cc.getName(), bucket.getDomain());
@@ -355,10 +362,10 @@ public class CredentialService extends CoreService {
         return Constants.SUCCESS;
     }
 
-    public byte[] getSoloCredentialFile(Integer id){
+    public byte[] getSoloCredentialFile(Integer id) {
         StringBuilder sb = new StringBuilder();
         int code = getSoloCredentialUrl(id, sb);
-        if(code != Constants.SUCCESS){
+        if (code != Constants.SUCCESS) {
             return null;
         }
         byte[] res = HTTPUtil.getByteFrom(sb.toString());

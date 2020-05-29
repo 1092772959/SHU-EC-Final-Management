@@ -1,6 +1,7 @@
 package com.shu.icpc.dao;
 
 import com.shu.icpc.entity.SoloCredential;
+import com.shu.icpc.entity.TeamCredential;
 
 import java.util.List;
 

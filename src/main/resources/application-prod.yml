@@ -1,9 +1,9 @@
 #spring:
 #  datasource:
-  #  url: jdbc:mysql://10.10.10.144:3306/PD_AAW2G?serverTimezone=CTT&useUnicode=true&characterEncoding=UTF-8
-  #  username: PD_AAW2G
-  #  password: a_zHIMlo
-  #  driver-class-name: com.mysql.cj.jdbc.Driver
+#  url: jdbc:mysql://10.10.10.144:3306/PD_AAW2G?serverTimezone=CTT&useUnicode=true&characterEncoding=UTF-8
+#  username: PD_AAW2G
+#  password: a_zHIMlo
+#  driver-class-name: com.mysql.cj.jdbc.Driver
 #
 #  thymeleaf:
 #    cache: false

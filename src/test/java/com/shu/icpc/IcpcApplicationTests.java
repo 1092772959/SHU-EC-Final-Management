@@ -55,26 +55,27 @@ public class IcpcApplicationTests extends CoreService {
 //    }
 
     @Test
-    public void testContest(){
+    public void testContest() {
 //        List<Map> res = teamService.getBySchoolAndContest(87, 3);
 //        for(Map m:res){
 //            System.out.println(m);
 //        }
     }
+
     @Test
-    public void testMailService(){
+    public void testMailService() {
         String emailAddr = "13120716616@163.com", title = "SHU_TEST", content = "asdasd";
         //mailService.sendSimpleMail(emailAddr, title, content);
     }
 
     @Test
-    public void genPassword(){
+    public void genPassword() {
         String pswd = PasswordGenerateUtil.getPassword("123456", "13120716616", Constants.hashTime);
         System.out.println(pswd);
     }
 
     @Test
-    public void addSolo(){
+    public void addSolo() {
         SoloContest soloContest = new SoloContest();
     }
 
@@ -93,7 +94,7 @@ public class IcpcApplicationTests extends CoreService {
     private ArticleDao articleDao;
 
     @Test
-    public void testArticle(){
+    public void testArticle() {
         Article article = new Article();
         article.setLatestEditTime(new Date());
         article.setStatus(2);
@@ -119,9 +120,9 @@ public class IcpcApplicationTests extends CoreService {
     }
 
     @Test
-    public void testSoloCredential(){
+    public void testSoloCredential() {
         List<SoloCredential> res = this.soloCredentialDao.findBySoloContestAndSchool(1, 87);
-        for(SoloCredential sc : res){
+        for (SoloCredential sc : res) {
             System.out.println(sc);
         }
 
@@ -130,21 +131,21 @@ public class IcpcApplicationTests extends CoreService {
     }
 
     @Test
-    public void deleteArticle(){
+    public void deleteArticle() {
         int code = articleDao.delete(6);
         //return value is 0: false or 1: true
         System.out.println(code);
     }
 
     @Test
-    public void updateArticle(){
+    public void updateArticle() {
         int code = articleDao.updateStatus(7, 3);
         //return value is 0 or 1
         System.out.println(code);
     }
 
     @Test
-    public void testZip(){
+    public void testZip() {
         String path = "/Users/lixiuwen/Downloads/icpc_test/ICPC-EC-FINAL.zip";
         //File file = new File("/Users/lixiuwen/Downloads/test/zip");
         try {
@@ -155,7 +156,7 @@ public class IcpcApplicationTests extends CoreService {
         }
     }
 
-//    @Resource
+    //    @Resource
 //    private StudentDao studentDao;
 //
 //    @Resource
@@ -380,7 +381,7 @@ public class IcpcApplicationTests extends CoreService {
 //    }
 //
     @Test
-    public void testCoachas(){
+    public void testCoachas() {
         String pswd = PasswordGenerateUtil.getPassword("000", "0123456789", Constants.hashTime);
         System.out.println(pswd);
     }
@@ -435,7 +436,7 @@ public class IcpcApplicationTests extends CoreService {
 //    }
 
     @Test
-    public void testTime(){
+    public void testTime() {
         String id = TimeUtil.getMillPrimaryKey();
         System.out.println(id);
         try {
@@ -448,7 +449,7 @@ public class IcpcApplicationTests extends CoreService {
     }
 
     @Test
-    public void testIdGetter(){
+    public void testIdGetter() {
         School school = new School();
         school.setSchoolName("测试大学");
         school.setTaxNum("asdasdXECE");

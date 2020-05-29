@@ -1,6 +1,5 @@
 package com.shu.icpc.Component.mq;
 
-import org.apache.shiro.SecurityUtils;
 
 import java.io.Serializable;
 

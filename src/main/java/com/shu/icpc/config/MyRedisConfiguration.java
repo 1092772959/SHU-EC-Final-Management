@@ -21,12 +21,13 @@ import java.time.Duration;
 public class MyRedisConfiguration {
 
     private Duration timeToLive = Duration.ZERO;
+
     public void setTimeToLive(Duration timeToLive) {
         this.timeToLive = timeToLive;
     }
 
 
-    @Bean(name="redisTemplate")
+    @Bean(name = "redisTemplate")
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory) {
 
         RedisTemplate<String, String> template = new RedisTemplate<>();
@@ -52,7 +53,7 @@ public class MyRedisConfiguration {
     }
 
     /**
-     保证redis作为缓存中间件，不会产生乱码
+     * 保证redis作为缓存中间件，不会产生乱码
      */
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {

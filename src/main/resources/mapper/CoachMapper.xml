@@ -7,25 +7,25 @@
         from coach
     </select>
 
-    <select id = "findById" parameterType="int" resultType= "Coach">
+    <select id="findById" parameterType="int" resultType="Coach">
         select *
         from coach
         where id = #{id}
     </select>
 
-    <select id="findBySchoolId" parameterType="int" resultType= "Coach">
+    <select id="findBySchoolId" parameterType="int" resultType="Coach">
         select id, coach_name, family_name, first_name, school_id, phone, email, sex, size, check_status
         from coach
         where school_id = #{schoolId}
     </select>
 
-    <select id="findByPhone" parameterType="String" resultType= "Coach">
+    <select id="findByPhone" parameterType="String" resultType="Coach">
         select *
         from coach
         where phone = #{phone}
     </select>
 
-    <select id="findByEmail" parameterType="String" resultType= "Coach">
+    <select id="findByEmail" parameterType="String" resultType="Coach">
         select *
         from coach
         where email = #{email}
@@ -41,7 +41,7 @@
     <update id="update" parameterType="Coach">
         update coach
         <trim prefix="set" suffixOverrides=",">
-            <if test="coachName!=null"> coach_name =#{coachName},</if>
+            <if test="coachName!=null">coach_name =#{coachName},</if>
             <if test="familyName!=null">family_name =#{familyName},</if>
             <if test="firstName!=null">first_name =#{firstName},</if>
             <if test="email!=null">email =#{email},</if>
@@ -57,7 +57,7 @@
         where email = #{email}
     </update>
 
-    <update id="updatePswd" >
+    <update id="updatePswd">
         update coach
         set pswd = #{pswd}
         where id = #{id}
@@ -74,9 +74,9 @@
             select LAST_INSERT_ID()
         </selectKey>
         insert into coach(coach_name, family_name, first_name, school_id,
-            phone, email, sex, size,  pswd, check_status)
+        phone, email, sex, size, pswd, check_status)
         values ( #{coachName}, #{familyName}, #{firstName}, #{schoolId},
-           #{phone}, #{email}, #{sex}, #{size}, #{pswd}, #{checkStatus})
+        #{phone}, #{email}, #{sex}, #{size}, #{pswd}, #{checkStatus})
     </insert>
 
     <delete id="delete">

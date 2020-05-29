@@ -25,8 +25,8 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
 //        String token = req.getHeader("Authorization");
         Session session = SecurityUtils.getSubject().getSession();
         Object stu = session.getAttribute(Constants.SESSION_USER);
-        System.out.println("过滤器: "+ stu);
-        if(stu == null){
+        System.out.println("过滤器: " + stu);
+        if (stu == null) {
             System.out.println("未登录");
             throw new UnauthenticatedException();
         }
@@ -39,9 +39,9 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
         HttpServletRequest req = (HttpServletRequest) request;
 
         HttpSession session = req.getSession();
-        Student stu = (Student)session.getAttribute(Constants.SESSION_USER);
+        Student stu = (Student) session.getAttribute(Constants.SESSION_USER);
 
-        System.out.println("拦截器："+stu);
+        System.out.println("拦截器：" + stu);
 
         return true;
     }

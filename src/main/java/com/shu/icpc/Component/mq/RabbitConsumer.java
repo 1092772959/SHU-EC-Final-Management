@@ -10,7 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-@Service
+//@Service
 public class RabbitConsumer {
 
     @Resource
@@ -21,23 +21,23 @@ public class RabbitConsumer {
 
     //消息监听
     @RabbitListener(queues = "shu")
-    public void receive(byte[] msg){
+    public void receive(byte[] msg) {
         ByteArrayInputStream bais = new ByteArrayInputStream(msg);
         Mail mail = null;
         try {
             ObjectInputStream ois = new ObjectInputStream(bais);
-            mail = (Mail)ois.readObject();
+            mail = (Mail) ois.readObject();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         mailService.sendSimpleMail(mail.getEmail(), mail.getTitle(), mail.getContent());
-        System.out.println("收到邮件业务："+ mail.getTitle());
+        System.out.println("收到邮件业务：" + mail.getTitle());
     }
 
     //接收完整Message
-    public void reveive2(Message message){
+    public void reveive2(Message message) {
         //消息体的字节数组
         System.out.println(message.getBody());
         //消息体的头信息

@@ -11,7 +11,7 @@ public class Constants {
     public static final Integer RETRY_TIME = 3;
 
     //-------------通用
-       public static final Integer SUCCESS = 600;      //修改操作成功
+    public static final Integer SUCCESS = 600;      //修改操作成功
 
     public static final Integer SUCCESS_GET = 605;  //get操作成功
 
@@ -41,7 +41,6 @@ public class Constants {
     public static final Integer CHECK_STATUS_REJECTED = 3;
 
 
-
     public static final Long COOKIE_TIMEOUT = 1000000000L;
 
     public static final String SESSION_USER = "user";       //key of storing user info in session memory
@@ -68,7 +67,6 @@ public class Constants {
 
     public static final Integer LOGIN_WRONG_PASSWORD_CODE = 703;
     public static final String LOGIN_WRONG_PASSWORD = "密码错误";
-
 
 
     //-----------------sign up
@@ -106,7 +104,7 @@ public class Constants {
 
     public static final Integer CONTEST_NOT_EXISTS = 731;  // no such contest
 
-    public static final Integer QUOTA_LIMIT =  732;
+    public static final Integer QUOTA_LIMIT = 732;
 
     //-----------------article related
     public static final Integer ARTICLE_NO_EXISTS = 740;
@@ -148,12 +146,12 @@ public class Constants {
     public static final String STU = "stu";
 
     /**
-     *  status code -> message mapping
+     * status code -> message mapping
      */
 
     public static Map<Integer, String> message = new HashMap<>();
 
-    static{
+    static {
         message.put(SUCCESS, "success");
         message.put(SUCCESS_GET, "success");
         message.put(NAME_DUPLICATED, "name duplicated");
@@ -189,6 +187,6 @@ public class Constants {
         message.put(ARTICLE_NO_ACCESS, "You have no access to modify this article");
         message.put(CHECK_ILLEGAL_CODE, "illegal status code when modifying article status");
         message.put(ZIP_ERROR, "zip file format error");
-        message.put(CREDENTIAL_NOT_EXISTS , "credential not exists, please contact the engineering RD");
+        message.put(CREDENTIAL_NOT_EXISTS, "credential not exists, please contact the engineering RD");
     }
 }
