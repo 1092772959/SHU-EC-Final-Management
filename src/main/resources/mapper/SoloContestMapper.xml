@@ -31,10 +31,37 @@
         #{chief}, #{phone}, #{email}, #{numMax})
     </insert>
 
+    <update id="update" parameterType="SoloContest">
+        update solo_contest
+        <trim prefix="set" suffixOverrides=",">
+            <if test="title!=null">title = #{title},</if>
+            <if test="startTime!=null">start_time=#{startTime},</if>
+            <if test="endTime!=null">end_time=#{endTime},</if>
+            <if test="signStartTime!=null">sign_start_time=#{signStartTime},</if>
+            <if test="signEndTime!=null">sign_end_time=#{signEndTime},</if>
+            <if test="schoolId!=null">school_id=#{schoolId},</if>
+            <if test="chief!=null">chief=#{chief},</if>
+            <if test="email!=null">email=#{email},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="numMax!=null">num_max=#{numMax},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateNumFact">
+        update solo_contest
+        set num_fact = #{numFact}
+        where id = #{id}
+    </update>
+
     <delete id="delete">
         delete from solo_contest
         where id = #{id}
     </delete>
+
+    <select id="hasContestRecord" resultType="Boolean">
+        select isnull((select top(1) 1 from solo_contest_record where solo_contest_id=#{id}), 0)
+    </select>
 
     <insert id="signInContest">
         insert into solo_contest_record(solo_contest_id, student_id, is_starred)

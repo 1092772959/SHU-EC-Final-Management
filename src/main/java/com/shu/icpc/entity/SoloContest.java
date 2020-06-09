@@ -38,8 +38,7 @@ public class SoloContest {
     @NotNull
     private Integer numMax;
 
-    //temporary variable, not persisted in database
-    private Integer numSignedIn;
+    private Integer numFact;
 
     public Integer getId() {
         return id;
@@ -129,11 +128,11 @@ public class SoloContest {
         this.numMax = numMax;
     }
 
-    public Integer getNumSignedIn() {
-        return numSignedIn;
+    public Integer getNumFact() {
+        return numFact;
     }
 
-    public void setNumSignedIn(Integer numSignedIn) {
-        this.numSignedIn = numSignedIn;
+    public void setNumFact(Integer numFact) {
+        this.numFact = numFact;
     }
 }

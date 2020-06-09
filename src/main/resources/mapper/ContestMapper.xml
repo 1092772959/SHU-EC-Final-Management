@@ -45,6 +45,28 @@
         #{chief}, #{phone}, #{email}, #{numTeamMax})
     </insert>
 
+    <update id="update" parameterType="Contest">
+        update contest
+        <trim prefix="set" suffixOverrides=",">
+            <if test="contestTitle!=null">contest_title = #{contestTitle},</if>
+            <if test="startTime!=null">start_time=#{startTime},</if>
+            <if test="endTime!=null">end_time=#{endTime},</if>
+            <if test="signStartTime!=null">sign_start_time=#{signStartTime},</if>
+            <if test="signEndTime!=null">sign_end_time=#{signEndTime},</if>
+            <if test="schoolId!=null">school_id=#{schoolId},</if>
+            <if test="chief!=null">chief=#{chief},</if>
+            <if test="email!=null">email=#{email},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateNumTotal">
+        update contest
+        set num_team_total = #{numTeamTotal}
+        where id = #{id}
+    </update>
+
     <delete id="delete">
         delete from contest
         where id = #{id}
@@ -60,6 +82,10 @@
         delete from contest_record
         where contest_id = #{contestId} and team_id = #{teamId}
     </delete>
+
+    <select id="hasContestRecord" resultType="Boolean">
+        select isnull((select top(1) 1 from contest_record where contest_id=#{contestId}), 0)
+    </select>
 
     <select id="findNumFactByContest" resultType="Integer">
         select COUNT(Z.team_id)
@@ -87,16 +113,22 @@
     </select>
 
     <select id="findQuotaByContest" resultType="java.util.Map">
-        select X.school_id as schoolId, S.school_name as schoolName, X.num_team_max as numTeamMax
+        select X.school_id as schoolId, S.school_name as schoolName, X.num_team_max as numTeamMax, X.num_lock as numLock
         from quota as X, school as S
         where X.contest_id = #{contestId} and X.school_id = S.id
     </select>
 
     <select id="findQuotaByContestAndSchool" resultType="java.util.Map">
-        select X.school_id as schoolId, S.school_name as schoolName, X.num_team_max as numTeamMax
+        select X.school_id as schoolId, S.school_name as schoolName, X.num_team_max as numTeamMax, X.num_lock as numLock
         from quota as X, school as S
         where X.contest_id = #{contestId} and X.school_id = S.id and S.id = #{schoolId}
     </select>
+
+    <update id="updateNumLock">
+        update quota
+        set num_lock = #{numLock}
+        where contest_id = #{contestId} and school_id = #{schoolId}
+    </update>
 
     <update id="updateQuota">
         update quota
@@ -146,9 +178,4 @@
         and CR.contest_id = #{contestId} and CR.team_id = T.id;
     </select>
 
-    <update id="updateAwardFilePath">
-        update contest_record
-        set award_path = #{path}
-        where contest_id = #{contestId} and team_id = #{teamId}
-    </update>
 </mapper>

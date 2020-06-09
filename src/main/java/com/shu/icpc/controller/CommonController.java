@@ -2,14 +2,13 @@ package com.shu.icpc.controller;
 
 
 import com.shu.icpc.entity.*;
+import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.Result;
 import com.shu.icpc.utils.ResultTool;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,12 +17,60 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
 @RequestMapping("/api")
 @Controller
 @Validated
 public class CommonController extends CoreController {
+
+    @ResponseBody
+    @GetMapping("/team")
+    public Result getTeams(Integer schoolId) {
+        Object res = null;
+        Object user = loginService.getUserFromSession();
+        if(user instanceof Coach){
+            res = teamService.getBySchoolId(((Coach)user).getSchoolId());
+        }else if(user instanceof Student){
+            res = teamService.getByStudent(((Student)user).getId());
+        }
+        return ResultTool.successGet(res);
+    }
+
+    /**
+     * 学校-竞赛名额查看
+     */
+    @ResponseBody
+    @GetMapping("/quota")
+    public Result getQuotaByContest(@NotNull Integer contestId, Integer schoolId) {
+        List<Map> res = null;
+        Object user = loginService.getUserFromSession();
+        if(user instanceof Admin ){
+            res = contestService.getQuotaByContest(contestId);
+        }else if(user instanceof Coach){
+            Coach ch = (Coach)user;
+            res = contestService.getQuotaByContestAndSchool(contestId, ch.getSchoolId());
+        }else {
+            return ResultTool.resp(Constants.UNAUTHORIZEDEXCEPTION_CODE);
+        }
+        return ResultTool.successGet(res);
+    }
+
+    @ResponseBody
+    @PostMapping("/quota")
+    public Result addQuota(@NotNull Integer contestId, @NotNull Integer schoolId, @NotNull Integer num) {
+        Object user = loginService.getUserFromSession();
+        if(!(user instanceof Admin) && !(user instanceof Coach)){
+            return ResultTool.resp(Constants.UNAUTHORIZEDEXCEPTION_CODE);
+        }
+        int code = contestService.setQuota(contestId, schoolId, num);
+        if (code != 0) {
+            return ResultTool.resp(Constants.FAIL);
+        }
+        return ResultTool.success();
+    }
+
 
     @ResponseBody
     @GetMapping("/solo")

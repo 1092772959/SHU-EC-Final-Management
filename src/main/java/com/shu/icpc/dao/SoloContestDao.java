@@ -25,6 +25,10 @@ public interface SoloContestDao {
     //学生报名比赛
     int signInContest(Integer studentId, Integer soloContestId, Integer isStarred);
 
+    int updateNumFact(Integer id, Integer numFact);
+
+    Boolean hasContestRecord(Integer id);
+
     //sign off
     int signOffContest(Integer studentId, Integer soloContestId);
 
@@ -32,6 +36,8 @@ public interface SoloContestDao {
 
     //添加一场比赛
     int insert(SoloContest soloContest);
+
+    int update(SoloContest soloContest);
 
     int delete(Integer id);
 

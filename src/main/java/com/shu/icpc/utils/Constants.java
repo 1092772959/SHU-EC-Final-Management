@@ -106,6 +106,8 @@ public class Constants {
 
     public static final Integer QUOTA_LIMIT = 732;
 
+    public static final Integer CONTEST_DELETE_ERROR = 733;
+
     //-----------------article related
     public static final Integer ARTICLE_NO_EXISTS = 740;
 
@@ -188,5 +190,6 @@ public class Constants {
         message.put(CHECK_ILLEGAL_CODE, "illegal status code when modifying article status");
         message.put(ZIP_ERROR, "zip file format error");
         message.put(CREDENTIAL_NOT_EXISTS, "credential not exists, please contact the engineering RD");
+        message.put(CONTEST_DELETE_ERROR, "contest has already been signed up");
     }
 }

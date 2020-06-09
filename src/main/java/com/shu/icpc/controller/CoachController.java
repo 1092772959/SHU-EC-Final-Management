@@ -120,12 +120,6 @@ public class CoachController extends CoreController {
     }
 
     @ResponseBody
-    @GetMapping("/team")
-    public Result getTeams(@NotNull Integer schoolId) {
-        return ResultTool.successGet(teamService.getBySchoolId(schoolId));
-    }
-
-    @ResponseBody
     @PostMapping("/delTeam")
     public Result deleteTeam(@NotNull Integer teamId) {
         boolean res = teamService.delete(teamId);

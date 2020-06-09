@@ -2,6 +2,8 @@ package com.shu.icpc.service;
 
 import com.shu.icpc.Component.OSSService;
 import com.shu.icpc.dao.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -63,4 +65,7 @@ public class CoreService {
 
     @Resource
     protected RedisTemplate redisTemplate;
+
+    //logger
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 }

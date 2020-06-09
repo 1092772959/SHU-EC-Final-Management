@@ -96,6 +96,24 @@ public class AdminController extends CoreController {
         return ResultTool.successGet(contestService.getAll());
     }
 
+    @ResponseBody
+    @PostMapping("/contest/update")
+    public Result updateContest(@Validated Contest contest){
+        int code = contestService.setContest(contest);
+        return ResultTool.resp(code, contest);
+    }
+
+
+    @ResponseBody
+    @PostMapping("/quota/lock")
+    public Result lockQuota(@NotNull Integer contestId, @NotNull Integer schoolId, @NotNull Integer lock){
+        int code = contestService.setQuotaNumLock(contestId, schoolId, lock);
+        if(code !=0 ){
+            return ResultTool.error();
+        }
+        return ResultTool.success();
+    }
+
     /**
      * 查看一场比赛的报名队伍
      *
@@ -110,56 +128,16 @@ public class AdminController extends CoreController {
 
     /**
      * 删除比赛-级联删除
-     *
+     * 如果已经有报名记录则不删除
      * @param contestId
      * @return
      */
     @ResponseBody
     @PostMapping("/contest/delete")
     public Result deleteContest(@NotNull Integer contestId) {
-        contestService.deleteContest(contestId);
-        return ResultTool.success();
-    }
-
-    /**
-     * 学校-竞赛名额查看
-     */
-    @ResponseBody
-    @GetMapping("/quota")
-    public Result getQuotaByContest(@NotNull Integer contestId, @NotNull Integer schoolId) {
-        List<Map> res = null;
-        if (schoolId <= 0) {
-            res = contestService.getQuotaByContest(contestId);
-        } else {
-            res = contestService.getQuotaByContestAndSchool(contestId, schoolId);
-        }
-        return ResultTool.successGet(res);
-    }
-
-    /**
-     * 添加 比赛-学校名额
-     *
-     * @param contestId
-     * @param schoolId
-     * @param num
-     * @return
-     */
-    @ResponseBody
-    @PostMapping("/quota")
-    public Result addQuota(@NotNull Integer contestId, @NotNull Integer schoolId, @NotNull Integer num) {
-        boolean res = contestService.addQuota(contestId, schoolId, num);
-        if (res) {
-            return ResultTool.success();
-        }
-        return ResultTool.resp(Constants.FAIL);
-    }
-
-    @ResponseBody
-    @PostMapping("/quota/update")
-    public Result updateQuota(@NotNull Integer contestId, @NotNull Integer schoolId, @NotNull Integer num) {
-        int code = contestService.setQuota(contestId, schoolId, num);
-        if (code != 1) {
-            return ResultTool.resp(Constants.UPDATE_QUOTA_ERROR);
+        int code = contestService.deleteContest(contestId);
+        if(code != 0){
+            return ResultTool.resp(code);
         }
         return ResultTool.success();
     }
@@ -189,12 +167,28 @@ public class AdminController extends CoreController {
     /**
      * solo contest related
      */
-
     @ResponseBody
     @PostMapping("/solo")
     public Result addSoloContest(@Validated SoloContest soloContest) {
         Integer code = this.soloContestService.addSoloContest(soloContest);
         return ResultTool.resp(code);
+    }
+
+    @ResponseBody
+    @PostMapping("/solo/update")
+    public Result getSoloContest(@Validated SoloContest soloContest){
+        Integer code = this.soloContestService.setSoloContest(soloContest);
+        return ResultTool.resp(code);
+    }
+
+    @ResponseBody
+    @PostMapping("/solo/delete")
+    public Result deleteSoloContest(@NotNull Integer id){
+        int code = soloContestService.delete(id);
+        if(code !=0 ){
+            return ResultTool.resp(code);
+        }
+        return ResultTool.success();
     }
 
     @ResponseBody
@@ -207,7 +201,6 @@ public class AdminController extends CoreController {
     /**
      * article related
      */
-
     @ResponseBody
     @PostMapping("/article")
     public Result addArticle(@Validated Article article) {

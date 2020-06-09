@@ -1,9 +1,9 @@
 package com.shu.icpc.service;
 
 
-import com.shu.icpc.entity.Contest;
-import com.shu.icpc.entity.School;
-import com.shu.icpc.entity.Team;
+import com.shu.icpc.entity.*;
+import com.shu.icpc.utils.Constants;
+import com.shu.icpc.utils.ResultTool;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +23,7 @@ public class ContestService extends CoreService {
         //设名额初值
         contest = contestDao.findByName(contest.getContestTitle());
         int id = contest.getId();
+        //异步
         List<School> schools = schoolDao.findAll();
         for (School school : schools) {
             contestDao.insertQuota(id, school.getId(), 0);
@@ -30,13 +31,36 @@ public class ContestService extends CoreService {
         return true;
     }
 
+    public Integer setContest(Contest contest){
+        if(contest.getId() == null){
+            return Constants.CONTEST_NOT_EXISTS;
+        }
+        Date signEnd = contest.getSignEndTime(), signStart = contest.getSignStartTime();
+        if (signEnd.before(signStart)) {
+            return Constants.TIME_ERROR;
+        }
+
+        Date end = contest.getEndTime(), start = contest.getStartTime();
+        if (end.before(start) || signEnd.after(start)) {
+            return Constants.TIME_ERROR;
+        }
+        School school = schoolDao.findById(contest.getSchoolId());
+        if(school == null){
+            return Constants.SIGN_UP_NO_SCHOOL;
+        }
+
+        contestDao.update(contest);
+        return 0;
+    }
+
     public List<Contest> getAll() {
         List<Contest> contests = contestDao.findAll();
+        /*
         for (Contest contest : contests) {
             //参加的全部队伍数
             Integer numTeamTotal = contestDao.findNumFactByContest(contest.getId());
             contest.setNumTeamTotal(numTeamTotal);
-        }
+        }*/
         return contests;
     }
 
@@ -52,12 +76,12 @@ public class ContestService extends CoreService {
             Integer numTeamMax = contestDao.findNumMaxByContestAndSchool(ct.getId(), schoolId);
 
             //参加的全部队伍数
-            Integer numTeamTotal = contestDao.findNumFactByContest(ct.getId());
+            //Integer numTeamTotal = contestDao.findNumFactByContest(ct.getId());
 
             numTeamMax = numTeamMax == null ? 0 : numTeamMax;
             ct.setNumTeamMax(numTeamMax);
             ct.setNumTeamFact(numTeamFact);
-            ct.setNumTeamTotal(numTeamTotal);
+            //ct.setNumTeamTotal(numTeamTotal);
         }
         return contests;
     }
@@ -84,7 +108,7 @@ public class ContestService extends CoreService {
             return false;
         }
 
-        //数量控制
+        //所属学校数量控制
         Integer haveLogin = contestDao.findByContestAndSchool(contestId, tm.getSchoolId());
         haveLogin = haveLogin == null ? 0 : haveLogin;
         Integer numFact = contestDao.findNumMaxByContestAndSchool(contestId, tm.getSchoolId());
@@ -109,37 +133,67 @@ public class ContestService extends CoreService {
         }
         String tag = onSite ? "是" : "否";
         contestDao.signInContest(contestId, teamId, isStarred, tag);
-
+        contestDao.updateNumTotal(contestId, ct.getNumTeamTotal() + 1);
         return true;
     }
 
     //
     public void signOff(Integer contestId, Integer teamId) {
-        contestDao.signOffContest(contestId, teamId);
+        Contest ct = contestDao.findById(contestId);
+        if(ct == null) return;
+        int code = contestDao.signOffContest(contestId, teamId);
+        if(code == 0) return;
+        contestDao.updateNumTotal(contestId, ct.getNumTeamTotal() - 1);
     }
 
-    public void deleteContest(Integer contestId) {
+    public int deleteContest(Integer contestId) {
+        //check if there is team signed up
+        if(contestDao.hasContestRecord(contestId)){
+            logger.info(String.format("Contest: %d has sign up record, cannot be deleted!", contestId));
+            return Constants.CONTEST_DELETE_ERROR;
+        }
         contestDao.delete(contestId);
+        return 0;
     }
 
     //增加学校-竞赛限额
-    public boolean addQuota(Integer contestId, Integer schoolId, Integer num) {
+    public int setQuota(Integer contestId, Integer schoolId, Integer num) {
         School school = schoolDao.findById(schoolId);
         if (school == null) {
-            return false;
+            return -1;
         }
         Contest contest = contestDao.findById(contestId);
         if (contest == null) {
-            return false;
+            return -1;
         }
-        System.out.println(school);
-        System.out.println(contest);
-        Integer haveNum = contestDao.findNumMaxByContestAndSchool(contestId, schoolId);
-        if (haveNum == null) {
+
+        //check if there is a piece of record in db
+        List<Map> quota_record = contestDao.findQuotaByContestAndSchool(contestId, schoolId);
+        if(quota_record.isEmpty()){
             contestDao.insertQuota(contestId, schoolId, num);
-            return true;
+            return 0;
         }
-        return false;
+
+        Integer lock = (Integer)quota_record.get(0).get("numLock");
+        if(lock != 0){
+            return -1;
+        }
+
+        Integer numTeamFact = contestDao.findByContestAndSchool(contestId, schoolId);
+        numTeamFact = numTeamFact == null ? 0 : numTeamFact;
+        if(numTeamFact > num){
+            return -1;
+        }
+        contestDao.updateQuota(contestId, schoolId, num);
+        return 0;
+    }
+
+    public int setQuotaNumLock(Integer contestId, Integer schoolId, Integer numLock){
+        if(numLock !=0 && numLock != 1){
+            return -1;
+        }
+        int code = contestDao.updateNumLock(contestId, schoolId, numLock);
+        return 0;
     }
 
     //查看限额
@@ -149,19 +203,6 @@ public class ContestService extends CoreService {
 
     public List<Map> getQuotaByContestAndSchool(Integer contestId, Integer schoolId) {
         return contestDao.findQuotaByContestAndSchool(contestId, schoolId);
-    }
-
-    public int setQuota(Integer contestId, Integer schoolId, Integer num) {
-        Integer numTeamFact = contestDao.findNumMaxByContestAndSchool(contestId, schoolId);
-        if (numTeamFact == null) {
-            contestDao.insertQuota(contestId, schoolId, num);
-            return 1;
-        }
-        if (numTeamFact > num) {
-            return 0;
-        }
-        contestDao.updateQuota(contestId, schoolId, num);
-        return 1;
     }
 
     public boolean setMealCoachNum(Integer contestId, Integer schoolId, Integer mealCoachNum) {

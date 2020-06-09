@@ -29,8 +29,11 @@ public interface ContestDao {
     //查看这场比赛所有学校的名额
     List<Map> findQuotaByContest(Integer contestId);
 
-    //查看这场比赛某所学校的名额
+    //查看一场比赛某所学校的名额
     List<Map> findQuotaByContestAndSchool(Integer contestId, Integer schoolId);
+
+    //锁定或解锁名额
+    int updateNumLock(Integer contestId, Integer schoolId, Integer numLock);
 
 //    Integer findTeamExistsByContestAndSchool(Integer contestId, Integer schoolId);
 
@@ -40,8 +43,14 @@ public interface ContestDao {
     //delete
     int signOffContest(Integer contestId, Integer teamId);
 
+    Boolean hasContestRecord(Integer contestId);
+
     //添加一场比赛
     int insert(Contest contest);
+
+    int update(Contest contest);
+
+    int updateNumTotal(Integer id, Integer numTeamTotal);
 
     int delete(Integer id);
 
@@ -50,8 +59,6 @@ public interface ContestDao {
 
     //更新竞赛-学校名额
     int updateQuota(Integer contestId, Integer schoolId, Integer num);
-
-//    int update(Contest contest);
 
     //进餐人数
     int updateMealNum(Integer contestId, Integer schoolId, Integer mealNum);
@@ -64,6 +71,4 @@ public interface ContestDao {
 
     List<Map> findDetailedInfo(Integer contestId);
 
-    //添加奖状文件路径
-    int updateAwardFilePath(Integer contestId, Integer teamId, String path);
 }
