@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shu.icpc.dao.ArticleDao">
+    <select id="findAll" resultType="Article">
+        select *
+        from article
+    </select>
+
+    <select id="findByStatus" resultType="Article">
+        select *
+        from article
+        where status = #{status}
+    </select>
+
+    <select id="findById" resultType="Article">
+        select *
+        from article
+        where id = #{id}
+    </select>
+
+    <select id="findByAdmin" resultType="Article">
+        select *
+        from article
+        where admin_id = #{adminId}
+    </select>
+
+    <select id="findByTitleLike" resultType="Article">
+        select *
+        from article
+        where title like '%${titleLike}%'
+    </select>
+
+    <select id="findByTitleLikeAndStatus" resultType="Article">
+        select *
+        from article
+        where status = #{status} and title like '%${titleLike}%'
+    </select>
+
+    <insert id="insert" parameterType="Article">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into article(title, intro, status, content, cover_url, admin_id, latest_edit_time, tag)
+        values(#{title}, #{intro}, #{status}, #{content}, #{coverUrl}, #{adminId}, #{latestEditTime}, #{tag})
+    </insert>
+
+    <update id="update">
+        update article
+        <trim prefix="set" suffixOverrides=",">
+            <if test="content!=null">content = #{content},</if>
+            <if test="coverUrl!=null">cover_url = #{coverUrl},</if>
+            <if test="intro!=null">intro = #{intro},</if>
+            <if test="latestEditTime">latest_edit_time = #{latestEditTime}</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update article
+        set status = #{status}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from article
+        where id = #{id}
+    </delete>
+
+</mapper>

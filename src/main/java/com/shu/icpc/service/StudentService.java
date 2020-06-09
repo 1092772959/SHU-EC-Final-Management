@@ -10,8 +10,8 @@ import java.util.List;
 
 @Service
 @Transactional
-public class StudentService extends CoreService{
-    public Student getById(Integer id){
+public class StudentService extends CoreService {
+    public Student getById(Integer id) {
         return studentDao.findById(id);
     }
 
@@ -19,37 +19,37 @@ public class StudentService extends CoreService{
         return studentDao.findByPhone(phone);
     }
 
-    public List<Student> getAll(){
+    public List<Student> getAll() {
         return studentDao.findAll();
     }
 
-    public List<Student> getBySchoolId(int schoolId){
+    public List<Student> getBySchoolId(int schoolId) {
         return studentDao.findBySchoolId(schoolId);
     }
 
     //shiro
-    public int setCheckStatus(int studentId, int statusCode){
+    public int setCheckStatus(int studentId, int statusCode) {
         Student stu = studentDao.findById(studentId);
-        if(stu == null){
+        if (stu == null) {
             return Constants.FAIL;
         }
         studentDao.updateStatus(studentId, statusCode);
         return Constants.SUCCESS;
     }
 
-    public void setStudent(Student student){
+    public void setStudent(Student student) {
         //有些值固定不变
         studentDao.update(student);
     }
 
-    public Integer setPassword(Integer studentId, String origin, String newPassword){
+    public Integer setPassword(Integer studentId, String origin, String newPassword) {
         Student student = studentDao.findById(studentId);
-        if(student == null){
+        if (student == null) {
             return Constants.FAIL;
         }
         origin = PasswordGenerateUtil.getPassword(origin, student.getPhone(), Constants.hashTime);
         String suppose = student.getPswd();
-        if(!suppose.equals(origin)){
+        if (!suppose.equals(origin)) {
             return Constants.FAIL;
         }
 
@@ -59,7 +59,7 @@ public class StudentService extends CoreService{
         return Constants.SUCCESS;
     }
 
-    public boolean hasStudent(Integer stuId){
+    public boolean hasStudent(Integer stuId) {
         Student stu = studentDao.findById(stuId);
         return stu != null;
     }

@@ -40,6 +40,7 @@ public class ShiroConfig {
 
     /**
      * 自定义realm
+     *
      * @return
      */
     @Bean
@@ -67,12 +68,8 @@ public class ShiroConfig {
     }
 
     /**
-     *
      * @param securityManager
-     * @return
-     *
-     * 1. 设置安全管理器
-     *
+     * @return 1. 设置安全管理器
      */
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager) {
@@ -81,7 +78,7 @@ public class ShiroConfig {
         //添加自定义的过滤器
         LinkedHashMap<String, String> uriFilter = new LinkedHashMap<>();
         //注意，这个白名单要加 且要加在后面那些拦截器之前，否则会把login也拦截
-        uriFilter.put("/api/user/**","anon");
+        uriFilter.put("/api/user/**", "anon");
 
         uriFilter.put("/api/**", "authc");                  //需要登陆
 

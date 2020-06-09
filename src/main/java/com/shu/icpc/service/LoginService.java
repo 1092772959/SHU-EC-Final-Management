@@ -33,8 +33,8 @@ public class LoginService extends CoreService {
             School school = schoolDao.findById(ch.getSchoolId());
             ch.setPswd("");
             ch.setSchoolName(school.getSchoolName());
-            if(school.getCoachId() == ch.getId()){
-                return ResultTool.resp(Constants.LOGIN_SUCCESS_CHIEF_CODE,ch);      //负责人教练
+            if (school.getCoachId() == ch.getId()) {
+                return ResultTool.resp(Constants.LOGIN_SUCCESS_CHIEF_CODE, ch);      //负责人教练
             }
             return ResultTool.resp(Constants.LOGIN_SUCCESS_COACH_CODE, ch);          //普通教练
         }
@@ -56,31 +56,46 @@ public class LoginService extends CoreService {
             stu.setPswd("");
             School school = schoolDao.findById(stu.getSchoolId());
             stu.setSchoolName(school.getSchoolName());
-            return ResultTool.resp(Constants.LOGIN_SUCCESS_CODE,stu);
+            return ResultTool.resp(Constants.LOGIN_SUCCESS_CODE, stu);
         }
 
         return ResultTool.resp(Constants.LOGIN_NO_ACCOUNT_CODE);           //用户不存在
     }
 
-    public Result adminLogin(String phone,String pswd) {
+    public Result adminLogin(String phone, String pswd) {
         Subject currentUser = SecurityUtils.getSubject();
+
         Admin admin = adminDao.findByPhone(phone);
-        if(admin == null)
+        if (admin == null) {
             return ResultTool.resp(Constants.LOGIN_NO_ACCOUNT_CODE);
+        }
+
+        admin.setPswd("");
+        Session session = currentUser.getSession();
+        session.setAttribute(Constants.SESSION_USER, admin);
+        session.setTimeout(Constants.COOKIE_TIMEOUT);
 
         ShiroToken token = new ShiroToken(phone, pswd, ShiroToken.Type.Admin);
         currentUser.login(token);
-        return ResultTool.success();
+        return ResultTool.resp(Constants.SUCCESS, admin);
     }
 
     public Result logout() {
         //shiro登出
         Subject subject = SecurityUtils.getSubject();
+
         if (subject.isAuthenticated()) {
-            System.out.println(subject.getPrincipal() + " logout");
+            Session session = subject.getSession();
+            session.removeAttribute(Constants.SESSION_USER);
             subject.logout();
             return ResultTool.resp(Constants.LOGIN_SUCCESS_CODE);
         }
         return ResultTool.resp(Constants.FAIL);
+    }
+
+    public Object getUserFromSession() {
+        Subject user = SecurityUtils.getSubject();
+        Session session = user.getSession();
+        return session.getAttribute(Constants.SESSION_USER);
     }
 }

@@ -15,7 +15,7 @@ public class Team {
     @NotNull
     private Integer schoolId;
 
-//    @NotBlank
+    //    @NotBlank
     private String schoolName;
 
     @NotNull

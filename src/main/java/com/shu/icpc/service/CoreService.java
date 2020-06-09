@@ -1,8 +1,8 @@
 package com.shu.icpc.service;
 
-import com.shu.icpc.Component.MailService;
+import com.shu.icpc.Component.OSSService;
 import com.shu.icpc.dao.*;
-import com.shu.icpc.entity.Student;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
@@ -36,9 +36,30 @@ public class CoreService {
     @Resource
     protected SoloContestDao soloContestDao;
 
+    @Resource
+    protected ArticleDao articleDao;
+
+    @Resource
+    protected TeamCredentialDao teamCredentialDao;
+
+    @Resource
+    protected SoloCredentialDao soloCredentialDao;
+
+    @Resource
+    protected BucketDao bucketDao;
+
     //services
     @Resource
     protected StudentService studentService;
+
+    @Resource
+    protected LoginService loginService;
+
+    @Resource
+    protected OSSService ossService;
+
+    @Resource
+    protected RabbitTemplate rabbitTemplate;
 
     @Resource
     protected RedisTemplate redisTemplate;

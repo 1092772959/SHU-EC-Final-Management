@@ -11,9 +11,10 @@ public class Result<Type> {
     private String message;
     private Type data;
 
-    public Result(){}
+    public Result() {
+    }
 
-    public Result(Integer status, String message){
+    public Result(Integer status, String message) {
         this.status = status;
         this.message = message;
     }

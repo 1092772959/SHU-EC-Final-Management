@@ -16,7 +16,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 
 import javax.annotation.Resource;
-import javax.management.relation.Role;
 import java.util.List;
 
 
@@ -36,13 +35,14 @@ public class ShiroRealm extends AuthorizingRealm {
 
     /**
      * 权限认证，即登录过后，每个身份不一定，对应能访问的接口也不同
+     *
      * @param principalCollection
      * @return
-             */
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        String phone = (String)principalCollection.getPrimaryPrincipal();
+        String phone = (String) principalCollection.getPrimaryPrincipal();
 
         List<String> roles = roleDao.findByPhone(phone);
         info.addRoles(roles);
@@ -52,6 +52,7 @@ public class ShiroRealm extends AuthorizingRealm {
 
     /**
      * 身份认证。即登录通过账号和密码验证登陆人的身份信息。
+     *
      * @param token
      * @return
      * @throws AuthenticationException
@@ -59,37 +60,37 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         ShiroToken shiroToken = (ShiroToken) token;
-        String phone = (String)shiroToken.getPrincipal();
+        String phone = (String) shiroToken.getPrincipal();
 
         ShiroToken.Type type = shiroToken.getType();
         int status;
         String realmName = getName();
         ByteSource credentialsSalt = ByteSource.Util.bytes(phone);
 
-        if(type.equals(ShiroToken.Type.Student)){
+        if (type.equals(ShiroToken.Type.Student)) {
             Student student = studentService.getByPhone(phone);
             status = student.getCheckStatus();
-            if(status == Constants.CHECK_STATUS_PASS) {
-                return new SimpleAuthenticationInfo(phone, student.getPswd(),credentialsSalt ,realmName);
-            }else if(status == Constants.CHECK_STATUS_CHECKED){
+            if (status == Constants.CHECK_STATUS_PASS) {
+                return new SimpleAuthenticationInfo(phone, student.getPswd(), credentialsSalt, realmName);
+            } else if (status == Constants.CHECK_STATUS_CHECKED) {
 
                 throw new LockedAccountException();
-            }else{
+            } else {
                 throw new DisabledAccountException();
             }
-        }else if(type.equals(ShiroToken.Type.Coach)){
+        } else if (type.equals(ShiroToken.Type.Coach)) {
             Coach coach = coachService.getByPhone(phone);
             status = coach.getCheckStatus();
-            if(status == Constants.CHECK_STATUS_PASS){
-                return new SimpleAuthenticationInfo(phone, coach.getPswd(), credentialsSalt ,realmName);
-            }else if(status == Constants.CHECK_STATUS_CHECKED){
+            if (status == Constants.CHECK_STATUS_PASS) {
+                return new SimpleAuthenticationInfo(phone, coach.getPswd(), credentialsSalt, realmName);
+            } else if (status == Constants.CHECK_STATUS_CHECKED) {
                 throw new LockedAccountException();
-            }else{
+            } else {
                 throw new DisabledAccountException();
             }
-        }else{
+        } else {
             Admin admin = adminService.getByPhone(phone);
-            return new SimpleAuthenticationInfo(phone, admin.getPswd(),credentialsSalt,realmName);      //admin用明文存储
+            return new SimpleAuthenticationInfo(phone, admin.getPswd(), credentialsSalt, realmName);      //admin用明文存储
         }
         //此处是正确的账号与密码，与studentService中的账号密码相匹配，若不同则抛出IncorrectCredentialsException异常
     }

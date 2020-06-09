@@ -83,9 +83,9 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.springframework.data</groupId>-->
-            <!--<artifactId>spring-data-redis</artifactId>-->
-            <!--<version>2.1.10.RELEASE</version>-->
+        <!--<groupId>org.springframework.data</groupId>-->
+        <!--<artifactId>spring-data-redis</artifactId>-->
+        <!--<version>2.1.10.RELEASE</version>-->
         <!--</dependency>-->
 
         <dependency>
@@ -105,7 +105,20 @@
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
-            <version>[6.1.7, 6.999]</version>
+            <version>[7.2.0, 7.2.99]</version>
+        </dependency>
+
+        <!-- gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+        </dependency>
+
+        <!--rabbit mq-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
     </dependencies>
@@ -117,35 +130,44 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.20.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+
             <!--&lt;!&ndash;添加mybatis generator maven插件&ndash;&gt;-->
             <!--<plugin>-->
-                <!--<groupId>org.mybatis.generator</groupId>-->
-                <!--<artifactId>mybatis-generator-maven-plugin</artifactId>-->
-                <!--<version>1.3.5</version>-->
-                <!--<configuration>-->
-                    <!--&lt;!&ndash;generatorConfig.xml位置&ndash;&gt;-->
-                    <!--<configurationFile>src/main/resources/mybatis-generator/generatorConfig.xml</configurationFile>-->
-                    <!--<verbose>true</verbose>-->
-                    <!--<overwrite>true</overwrite>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>Generate MyBatis Artifacts</id>-->
-                        <!--<goals>-->
-                            <!--<goal>generate</goal>-->
-                        <!--</goals>-->
-                        <!--<phase>generate-sources</phase>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--&lt;!&ndash;此处必须添加mysql驱动包&ndash;&gt;-->
-                <!--<dependencies>-->
-                    <!--<dependency>-->
-                        <!--<groupId>mysql</groupId>-->
-                        <!--<artifactId>mysql-connector-java</artifactId>-->
-                        <!--<scope>runtime</scope>-->
-                        <!--<version>5.1.46</version>-->
-                    <!--</dependency>-->
-                <!--</dependencies>-->
+            <!--<groupId>org.mybatis.generator</groupId>-->
+            <!--<artifactId>mybatis-generator-maven-plugin</artifactId>-->
+            <!--<version>1.3.5</version>-->
+            <!--<configuration>-->
+            <!--&lt;!&ndash;generatorConfig.xml位置&ndash;&gt;-->
+            <!--<configurationFile>src/main/resources/mybatis-generator/generatorConfig.xml</configurationFile>-->
+            <!--<verbose>true</verbose>-->
+            <!--<overwrite>true</overwrite>-->
+            <!--</configuration>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>Generate MyBatis Artifacts</id>-->
+            <!--<goals>-->
+            <!--<goal>generate</goal>-->
+            <!--</goals>-->
+            <!--<phase>generate-sources</phase>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--&lt;!&ndash;此处必须添加mysql驱动包&ndash;&gt;-->
+            <!--<dependencies>-->
+            <!--<dependency>-->
+            <!--<groupId>mysql</groupId>-->
+            <!--<artifactId>mysql-connector-java</artifactId>-->
+            <!--<scope>runtime</scope>-->
+            <!--<version>5.1.46</version>-->
+            <!--</dependency>-->
+            <!--</dependencies>-->
             <!--</plugin>-->
 
 

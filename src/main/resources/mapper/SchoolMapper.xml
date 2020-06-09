@@ -16,7 +16,7 @@
         where check_status = 1
     </select>
 
-    <select id="findById" parameterType="int" resultType= "School">
+    <select id="findById" parameterType="int" resultType="School">
         select * from school where id = #{id}
     </select>
 
@@ -29,12 +29,12 @@
     </select>
 
     <!--<update id="update" parameterType="School">-->
-        <!--update school-->
-        <!--set school_name = #{schoolName}, abbr_name = #{abbrName}, address = #{address},-->
-          <!--coach_id = #{coachId}, chief_name = #{chiefName}, phone = #{phone},-->
-          <!--bill_enterprise = #{billEnterprise}, postcode = #{postcode},-->
-          <!--tax_num = #{taxNum}, check_status = #{checkStatus}-->
-        <!--where id = #{id}-->
+    <!--update school-->
+    <!--set school_name = #{schoolName}, abbr_name = #{abbrName}, address = #{address},-->
+    <!--coach_id = #{coachId}, chief_name = #{chiefName}, phone = #{phone},-->
+    <!--bill_enterprise = #{billEnterprise}, postcode = #{postcode},-->
+    <!--tax_num = #{taxNum}, check_status = #{checkStatus}-->
+    <!--where id = #{id}-->
     <!--</update>-->
 
     <update id="update" parameterType="School">
@@ -64,9 +64,10 @@
             select LAST_INSERT_ID()
         </selectKey>
         insert into school(school_name, abbr_name, address, coach_id, chief_name, phone, bill_enterprise, postcode,
-            tax_num, check_status)
-        values (#{schoolName}, #{abbrName}, #{address}, #{coachId}, #{chiefName}, #{phone}, #{billEnterprise}, #{postcode},
-           #{taxNum}, #{checkStatus})
+        tax_num, check_status)
+        values (#{schoolName}, #{abbrName}, #{address}, #{coachId}, #{chiefName}, #{phone}, #{billEnterprise},
+        #{postcode},
+        #{taxNum}, #{checkStatus})
     </insert>
 
     <delete id="delete">

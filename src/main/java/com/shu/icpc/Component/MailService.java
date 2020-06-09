@@ -24,9 +24,9 @@ public class MailService {
     private String host;
 
     /**
-     to:接收者的地址
-     subject:主题
-     content:文本内容
+     * to:接收者的地址
+     * subject:主题
+     * content:文本内容
      */
     public void sendSimpleMail(String to, String subject, String content) {
         SimpleMailMessage message = new SimpleMailMessage();

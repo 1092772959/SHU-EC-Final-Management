@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shu.icpc.dao.SoloContestDao">
 
-    <select id = "findAll" resultType="SoloContest">
+    <select id="findAll" resultType="SoloContest">
         select *
         from solo_contest
     </select>
@@ -20,15 +20,15 @@
     <select id="findByStudentId" resultType="SoloContest">
         select * from solo_contest
         where id in (
-          select solo_contest_id from solo_contest_record where student_id = #{studentId}
+        select solo_contest_id from solo_contest_record where student_id = #{studentId}
         )
     </select>
 
     <insert id="insert" parameterType="SoloContest">
         insert into solo_contest(title, start_time, end_time, sign_start_time, sign_end_time, school_id,
-              chief, phone, email, num_max)
+        chief, phone, email, num_max)
         values (#{title}, #{startTime}, #{endTime}, #{signStartTime}, #{signEndTime}, #{schoolId},
-                #{chief}, #{phone}, #{email}, #{numMax})
+        #{chief}, #{phone}, #{email}, #{numMax})
     </insert>
 
     <delete id="delete">
@@ -46,6 +46,12 @@
         where solo_contest_id = #{soloContestId} and student_id = #{studentId}
     </delete>
 
+    <select id="findSignedIn" resultType="Integer">
+        select student_id
+        from solo_contest_record
+        where solo_contest_id = #{soloContestId} and student_id = #{studentId}
+    </select>
+
     <select id="findNumFactByContest" resultType="Integer">
         select COUNT(Z.student_id)
         from solo_contest_record as Z
@@ -55,21 +61,23 @@
     <select id="findDetailsByContestAndSchool" resultType="java.util.LinkedHashMap">
         select
         S.school_name as schoolName, S.abbr_name as abbrName,
-        ST.stu_id as stuId, ST.stu_name as stuName, CONCAT(ST.family_name, ' ', ST.first_name) as stuForeignName,
+        ST.id as id, ST.stu_id as stuId, ST.stu_name as stuName, CONCAT(ST.family_name, ' ', ST.first_name) as
+        stuForeignName,
         ST.phone, ST.email, ST.sex as sex, ST.size as size
         from school as S, student as ST, solo_contest as C, solo_contest_record as R
         where S.id = ST.school_id and ST.id = R.student_id and C.id = R.solo_contest_id
-            and C.id = #{soloContestId} and S.id = #{schoolId}
+        and C.id = #{soloContestId} and S.id = #{schoolId}
     </select>
 
     <select id="findDetailsByContest" resultType="java.util.LinkedHashMap">
         select
         S.school_name as schoolName, S.abbr_name as abbrName,
-        ST.stu_id as stuId, ST.stu_name as stuName, CONCAT(ST.family_name, ' ', ST.first_name) as stuForeignName,
+        ST.id as id, ST.stu_id as stuId, ST.stu_name as stuName, CONCAT(ST.family_name, ' ', ST.first_name) as
+        stuForeignName,
         ST.phone, ST.email, ST.sex as sex, ST.size as size
         from school as S, student as ST, solo_contest as C, solo_contest_record as R
         where S.id = ST.school_id and ST.id = R.student_id and C.id = R.solo_contest_id
-            and C.id = #{soloContestId}
+        and C.id = #{soloContestId}
     </select>
 
 </mapper>

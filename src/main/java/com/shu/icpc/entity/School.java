@@ -5,10 +5,11 @@ import javax.validation.constraints.NotNull;
 
 public class School {
 
-    public School(){}
+    public School() {
+    }
 
     public School(@NotBlank String schoolName,
-                  @NotBlank String chiefName, @NotBlank String phone){
+                  @NotBlank String chiefName, @NotBlank String phone) {
         this.schoolName = schoolName;
         this.chiefName = chiefName;
         this.phone = phone;
