@@ -5,8 +5,10 @@ import com.shu.icpc.utils.Constants;
 import com.shu.icpc.utils.Result;
 import com.shu.icpc.utils.ResultTool;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,10 +17,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.zip.ZipInputStream;
 
 @RequiresRoles("admin")
@@ -26,6 +26,11 @@ import java.util.zip.ZipInputStream;
 @Controller
 @Validated
 public class AdminController extends CoreController {
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
 
     @ResponseBody
     @PostMapping("/logout")

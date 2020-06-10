@@ -40,9 +40,9 @@
 
     <insert id="insert" parameterType="Contest">
         insert into contest(contest_title, start_time, end_time, sign_start_time, sign_end_time, school_id,
-        chief, phone, email, num_team_max)
+        chief, phone, email, num_team_total)
         values (#{contestTitle}, #{startTime}, #{endTime}, #{signStartTime}, #{signEndTime}, #{schoolId},
-        #{chief}, #{phone}, #{email}, #{numTeamMax})
+        #{chief}, #{phone}, #{email}, 0)
     </insert>
 
     <update id="update" parameterType="Contest">
@@ -83,8 +83,8 @@
         where contest_id = #{contestId} and team_id = #{teamId}
     </delete>
 
-    <select id="hasContestRecord" resultType="Boolean">
-        select isnull((select top(1) 1 from contest_record where contest_id=#{contestId}), 0)
+    <select id="hasContestRecord" resultType="Integer">
+        select COUNT(*) from contest_record where contest_id = #{contestId}
     </select>
 
     <select id="findNumFactByContest" resultType="Integer">

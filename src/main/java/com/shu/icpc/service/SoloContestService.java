@@ -76,10 +76,11 @@ public class SoloContestService extends CoreService {
     }
 
     public Integer delete(Integer id){
-        if(contestDao.hasContestRecord(id)){
+        if(soloContestDao.hasContestRecord(id) != 0){
             return Constants.CONTEST_DELETE_ERROR;
         }
-        if(contestDao.delete(id)!=0){
+        int code = soloContestDao.delete(id);
+        if(code==0){
             return Constants.CONTEST_NOT_EXISTS;
         }
         return 0;

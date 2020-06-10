@@ -27,7 +27,7 @@ public interface SoloContestDao {
 
     int updateNumFact(Integer id, Integer numFact);
 
-    Boolean hasContestRecord(Integer id);
+    Integer hasContestRecord(Integer id);
 
     //sign off
     int signOffContest(Integer studentId, Integer soloContestId);

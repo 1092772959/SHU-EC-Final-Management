@@ -43,7 +43,7 @@ public interface ContestDao {
     //delete
     int signOffContest(Integer contestId, Integer teamId);
 
-    Boolean hasContestRecord(Integer contestId);
+    Integer hasContestRecord(Integer contestId);
 
     //添加一场比赛
     int insert(Contest contest);

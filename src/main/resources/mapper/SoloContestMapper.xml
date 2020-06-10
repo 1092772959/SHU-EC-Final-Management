@@ -26,9 +26,9 @@
 
     <insert id="insert" parameterType="SoloContest">
         insert into solo_contest(title, start_time, end_time, sign_start_time, sign_end_time, school_id,
-        chief, phone, email, num_max)
+        chief, phone, email, num_max, num_fact)
         values (#{title}, #{startTime}, #{endTime}, #{signStartTime}, #{signEndTime}, #{schoolId},
-        #{chief}, #{phone}, #{email}, #{numMax})
+        #{chief}, #{phone}, #{email}, #{numMax}, 0)
     </insert>
 
     <update id="update" parameterType="SoloContest">
@@ -59,8 +59,8 @@
         where id = #{id}
     </delete>
 
-    <select id="hasContestRecord" resultType="Boolean">
-        select isnull((select top(1) 1 from solo_contest_record where solo_contest_id=#{id}), 0)
+    <select id="hasContestRecord" resultType="Integer">
+        select COUNT(*) from solo_contest_record where solo_contest_id = #{id}
     </select>
 
     <insert id="signInContest">

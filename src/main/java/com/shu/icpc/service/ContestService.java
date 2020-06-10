@@ -18,6 +18,7 @@ public class ContestService extends CoreService {
         if (tmp != null) {
             return false;
         }
+        contest.setNumTeamTotal(0);
         contestDao.insert(contest);
 
         //设名额初值
@@ -50,7 +51,7 @@ public class ContestService extends CoreService {
         }
 
         contestDao.update(contest);
-        return 0;
+        return Constants.SUCCESS;
     }
 
     public List<Contest> getAll() {
@@ -148,7 +149,7 @@ public class ContestService extends CoreService {
 
     public int deleteContest(Integer contestId) {
         //check if there is team signed up
-        if(contestDao.hasContestRecord(contestId)){
+        if(contestDao.hasContestRecord(contestId) != 0){
             logger.info(String.format("Contest: %d has sign up record, cannot be deleted!", contestId));
             return Constants.CONTEST_DELETE_ERROR;
         }
