@@ -26,11 +26,6 @@ import java.util.zip.ZipInputStream;
 @Controller
 @Validated
 public class AdminController extends CoreController {
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
-    }
 
     @ResponseBody
     @PostMapping("/logout")

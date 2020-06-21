@@ -102,8 +102,8 @@
 
 
     <insert id="insertQuota">
-        insert into quota(school_id, contest_id, num_team_max, meal_coach_num)
-        values(#{schoolId}, #{contestId}, #{num}, 0)
+        insert into quota(school_id, contest_id, num_team_max, meal_coach_num, num_lock)
+        values(#{schoolId}, #{contestId}, #{num}, 0, 0)
     </insert>
 
     <select id="findNumMaxByContestAndSchool" resultType="Integer">

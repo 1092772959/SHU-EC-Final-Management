@@ -103,7 +103,8 @@ public class CredentialService extends CoreService {
 
             TeamCredential tmp = teamCredentialDao.findByContestAndTeam(contestId, teamId);
             if (tmp != null) {
-                this.appendMsgElem(failedList, fileName, Constants.MSG_NAME_NOT_NUMBER);
+                //file exists
+                this.appendMsgElem(failedList, fileName, Constants.MSG_CREDENTIAL_EXISTS);
                 continue;
             }
 
@@ -131,10 +132,10 @@ public class CredentialService extends CoreService {
             tc.setUploadTime(Calendar.getInstance().getTime());
             tc.setBucket(ossService.BUCKET_PRIVATE);
 
-            //save to mysql
             try {
                 this.teamCredentialDao.insert(tc);
             } catch (Exception e) {
+                e.printStackTrace();
                 //TODO: add exception resp
             }
             successList.add(entry.getKey());
